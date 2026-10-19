@@ -119,3 +119,67 @@ a {
   color: var(--muted);
   margin-bottom: 2rem;
 }
+
+.error {
+  color: #b42318;
+}
+
+/* Tables (gift lists) */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  background: var(--gold-soft);
+  color: var(--navy);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.fund-tag {
+  display: inline-block;
+  padding: 0.15rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.fund-tithe {
+  background: #e8edf7;
+  color: var(--navy);
+}
+
+.fund-offering {
+  background: var(--gold-soft);
+  color: #7a5c1e;
+}
+
+.fund-building {
+  background: #e9f3ee;
+  color: #24593f;
+}
