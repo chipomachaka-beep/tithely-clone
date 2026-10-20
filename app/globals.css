@@ -494,3 +494,116 @@ a {
   font-size: 1.4rem;
   margin-bottom: 0.8rem;
 }
+
+/* Home page: verse, fund cards, and steps */
+.hero-verse {
+  font-family: var(--font-heading), Georgia, serif;
+  font-style: italic;
+  font-size: 1.35rem;
+  color: var(--navy-light);
+  margin: 0.5rem 0 1.25rem;
+}
+
+.hero-verse cite {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--gold);
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+.home-section {
+  padding: 2.5rem 0 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: 1.5rem;
+}
+
+.home-heading {
+  text-align: center;
+  font-size: 1.7rem;
+  margin-bottom: 1.5rem;
+}
+
+.fund-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.fund-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.fund-card h3 {
+  font-size: 1.25rem;
+  margin: 0.6rem 0 0.4rem;
+}
+
+.fund-card p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.fund-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--gold);
+}
+
+.fund-card-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.step {
+  background: var(--gold-soft);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.step h3 {
+  font-size: 1.15rem;
+  margin: 0.6rem 0 0.3rem;
+}
+
+.step p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
