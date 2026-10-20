@@ -13,7 +13,7 @@ export default async function SiteHeader() {
   if (user) {
     const { data } = await supabase
       .from("profiles")
-      .select("full_name")
+      .select("full_name, role")
       .eq("id", user.id)
       .single();
     profile = data;
@@ -29,6 +29,9 @@ export default async function SiteHeader() {
         {user ? (
           <>
             <Link href="/history">My Giving</Link>
+            {profile?.role === "treasurer" && (
+              <Link href="/dashboard">Dashboard</Link>
+            )}
             <span className="nav-name">{profile?.full_name}</span>
             <form action={logout}>
               <button type="submit" className="nav-button">

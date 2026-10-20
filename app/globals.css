@@ -458,3 +458,39 @@ a {
   font-size: 0.85rem;
   margin-top: 0.75rem;
 }
+
+/* Treasurer dashboard */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-grid .stat-card {
+  display: flex;
+  margin-bottom: 0;
+}
+
+.stat-card-total {
+  background: var(--navy);
+}
+
+.stat-card-total .stat-label,
+.stat-card-total .stat-detail {
+  color: #c9d2e3;
+}
+
+.stat-card-total .stat-value {
+  color: var(--white);
+}
+
+.stat-detail {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.section-heading {
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+}
