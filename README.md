@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tithely Clone: Invitation Hill SDA Church Giving
 
-## Getting Started
+A bootcamp demo that rebuilds the core of Tithely Giving:
 
-First, run the development server:
+- **Give a donation:** pick an amount and a fund (Tithe, Offering, or Building Fund).
+- **See my giving history:** each member sees only their own gifts and total.
+- **Treasurer dashboard:** the treasurer sees every gift plus totals per fund.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Payments are faked.** Clicking "Give" records the donation in the database; no card is charged.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Not built: real payments, text-to-give, recurring giving, tax statement PDFs, pledge campaigns.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [Next.js](https://nextjs.org) (App Router, plain JavaScript and CSS)
+- [Supabase](https://supabase.com) for accounts and the Postgres database
+- [Vercel](https://vercel.com) for hosting
 
-## Learn More
+## Run it locally
 
-To learn more about Next.js, take a look at the following resources:
+1. Copy `.env.example` to `.env.local` and fill in your Supabase Project URL and
+   publishable key (Supabase dashboard → Project Settings → API).
+2. `npm install`
+3. `npm run dev`, then open http://localhost:3000
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Set up the database
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+In Supabase, turn off **Authentication → Providers → Email → Confirm email**.
+Then run these files in **SQL Editor**, in order:
 
-## Deploy on Vercel
+| File | What it does |
+|---|---|
+| `supabase/schema.sql` | Creates the `profiles` and `donations` tables |
+| `supabase/policies.sql` | Security rules: members see their own gifts, treasurers see all |
+| `supabase/seed.sql` | Sample gifts (create `maria@example.com` and `james@example.com` first) |
+| `supabase/make-treasurer.sql` | Makes `treasurer@example.com` the treasurer (create that user first) |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Helpers, only if needed:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `supabase/reset-test-passwords.sql`: sets the test accounts' passwords to `test123456`
+- `supabase/remove-duplicate-donations.sql`: removes sample gifts added twice
+
+## Deploy to Vercel
+
+1. Push this repo to GitHub.
+2. In Vercel, choose **Add New → Project** and import the repo.
+3. Under **Environment Variables**, add `NEXT_PUBLIC_SUPABASE_URL` and
+   `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, then click **Deploy**.
+4. In Supabase → **Authentication → URL Configuration**, set **Site URL** to
+   your Vercel address.
