@@ -116,7 +116,7 @@ export default async function DashboardPage() {
         <p>No donations yet.</p>
       ) : (
         <div className="table-wrap">
-          <table className="table">
+          <table className="table table-stack">
             <thead>
               <tr>
                 <th>Date</th>

@@ -1,4 +1,5 @@
 import { Inter, Source_Serif_4 } from "next/font/google";
+import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import "./globals.css";
 
@@ -17,7 +18,25 @@ export default function RootLayout({ children }) {
         <SiteHeader />
         <main className="container">{children}</main>
         <footer className="site-footer">
-          Demo app for a bootcamp. No real payments are processed.
+          <div className="footer-inner">
+            <div>
+              <p className="footer-name">
+                <span className="brand-mark">✝</span> Invitation Hill SDA Church
+              </p>
+              <address className="footer-address">
+                10730 Highway 10
+                <br />
+                Dickinson, ND
+              </address>
+            </div>
+            <nav className="footer-links" aria-label="Footer">
+              <Link href="/give">Give</Link>
+              <Link href="/history">My Giving</Link>
+            </nav>
+          </div>
+          <p className="footer-note">
+            Demo app for a bootcamp. No real payments are processed.
+          </p>
         </footer>
       </body>
     </html>
