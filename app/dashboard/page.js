@@ -26,7 +26,7 @@ export default async function DashboardPage() {
   // Get every donation, newest first, along with the giver's name from profiles.
   const { data: donations, error } = await supabase
     .from("donations")
-    .select("id, amount, fund, given_on, profiles(full_name)")
+    .select("id, user_id, amount, fund, given_on, profiles(full_name)")
     .order("given_on", { ascending: false })
     .order("created_at", { ascending: false });
 
@@ -34,12 +34,30 @@ export default async function DashboardPage() {
     return <p className="error">Could not load donations: {error.message}</p>;
   }
 
-  // Add up the totals for each fund and overall.
+  // Add up the totals for each fund, overall, and for this month.
+  // Gift dates look like "2026-10-05", so this month's dates start with "2026-10".
+  const thisMonth = new Date().toISOString().slice(0, 7);
+  const monthName = new Date().toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "long",
+    year: "numeric",
+  });
+
   const fundTotals = { tithe: 0, offering: 0, building: 0 };
+  let monthTotal = 0;
   for (const d of donations) {
     fundTotals[d.fund] += Number(d.amount);
+    if (d.given_on.startsWith(thisMonth)) {
+      monthTotal += Number(d.amount);
+    }
   }
   const grandTotal = fundTotals.tithe + fundTotals.offering + fundTotals.building;
+
+  // A giver is anyone with at least one gift; count each person once.
+  const giverCount = new Set(donations.map((d) => d.user_id)).size;
+
+  // Bars are sized relative to the biggest fund, which fills the full width.
+  const largestFund = Math.max(...Object.values(fundTotals));
 
   return (
     <section>
@@ -54,13 +72,44 @@ export default async function DashboardPage() {
             {donations.length} {donations.length === 1 ? "gift" : "gifts"}
           </span>
         </div>
-        {Object.keys(FUND_LABELS).map((fund) => (
-          <div key={fund} className="stat-card">
-            <span className="stat-label">{FUND_LABELS[fund]}</span>
-            <span className="stat-value">{formatMoney(fundTotals[fund])}</span>
-          </div>
-        ))}
+        <div className="stat-card">
+          <span className="stat-label">This month</span>
+          <span className="stat-value">{formatMoney(monthTotal)}</span>
+          <span className="stat-detail">{monthName}</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-label">Number of givers</span>
+          <span className="stat-value">{giverCount}</span>
+          <span className="stat-detail">
+            {giverCount === 1 ? "person has" : "people have"} given
+          </span>
+        </div>
       </div>
+
+      <h2 className="section-heading">Totals by Fund</h2>
+      <ul className="bar-chart">
+        {Object.keys(FUND_LABELS).map((fund) => {
+          const total = fundTotals[fund];
+          const width = largestFund > 0 ? (total / largestFund) * 100 : 0;
+          const share = grandTotal > 0 ? Math.round((total / grandTotal) * 100) : 0;
+          return (
+            <li
+              key={fund}
+              className="bar-row"
+              title={`${FUND_LABELS[fund]}: ${formatMoney(total)} (${share}% of all giving)`}
+            >
+              <span className="bar-label">{FUND_LABELS[fund]}</span>
+              <span className="bar-track">
+                <span className="bar-fill" style={{ width: `${width}%` }} />
+              </span>
+              <span className="bar-value">
+                {formatMoney(total)}
+                <span className="bar-share">{share}%</span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
 
       <h2 className="section-heading">All Gifts</h2>
       {donations.length === 0 ? (

@@ -746,3 +746,75 @@ a {
     animation: none;
   }
 }
+
+/* Treasurer dashboard: horizontal bar chart (plain HTML and CSS) */
+.bar-chart {
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr) 8rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.2rem 0;
+  border-radius: 6px;
+}
+
+.bar-row:hover {
+  background: var(--gold-soft);
+}
+
+.bar-label {
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.bar-track {
+  height: 22px;
+  background: var(--gold-soft);
+  border-left: 2px solid var(--gold);
+}
+
+/* Square at the baseline, rounded at the end the value grows toward. */
+.bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--navy);
+  border-radius: 0 4px 4px 0;
+}
+
+.bar-value {
+  text-align: right;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-share {
+  display: inline-block;
+  min-width: 2.6rem;
+  margin-left: 0.5rem;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+  .bar-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.3rem 0.75rem;
+  }
+
+  .bar-track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
