@@ -29,6 +29,12 @@ export default async function HistoryPage({ searchParams }) {
 
   const total = donations.reduce((sum, d) => sum + Number(d.amount), 0);
 
+  // My total for each fund.
+  const fundTotals = { tithe: 0, offering: 0, building: 0 };
+  for (const d of donations) {
+    fundTotals[d.fund] += Number(d.amount);
+  }
+
   return (
     <section>
       {gave && (
@@ -48,6 +54,17 @@ export default async function HistoryPage({ searchParams }) {
       <div className="stat-card">
         <span className="stat-label">Total given</span>
         <span className="stat-value">{formatMoney(total)}</span>
+      </div>
+
+      <div className="fund-totals">
+        {Object.keys(FUND_LABELS).map((fund) => (
+          <div key={fund} className={`fund-total fund-total-${fund}`}>
+            <span className="stat-label">{FUND_LABELS[fund]}</span>
+            <span className="fund-total-value">
+              {formatMoney(fundTotals[fund])}
+            </span>
+          </div>
+        ))}
       </div>
 
       {donations.length === 0 ? (

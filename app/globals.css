@@ -277,7 +277,7 @@ a {
   border-left: 4px solid var(--gold);
   border-radius: var(--radius);
   padding: 1rem 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .stat-label {
@@ -817,4 +817,48 @@ a {
     grid-column: 1 / -1;
     grid-row: 2;
   }
+}
+
+/* My Giving: small per-fund totals under Total Given */
+.fund-totals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 180px));
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+@media (max-width: 520px) {
+  .fund-totals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.fund-total {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.7rem 1rem;
+}
+
+/* Left edge matches the fund's tag color in the gifts table. */
+.fund-total-tithe {
+  border-left-color: var(--navy);
+}
+
+.fund-total-offering {
+  border-left-color: var(--gold);
+}
+
+.fund-total-building {
+  border-left-color: #2f7a52;
+}
+
+.fund-total-value {
+  font-family: var(--font-heading), Georgia, serif;
+  color: var(--navy);
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
