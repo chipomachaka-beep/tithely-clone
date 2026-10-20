@@ -32,9 +32,14 @@ export default async function HistoryPage({ searchParams }) {
   return (
     <section>
       {gave && (
-        <p className="notice-success">
-          Thank you! Your gift has been recorded.
-        </p>
+        <div className="thank-you" role="status">
+          <span className="thank-you-check">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12.5l4.5 4.5L19 7.5" />
+            </svg>
+          </span>
+          <h2>Thank you, your gift has been recorded</h2>
+        </div>
       )}
 
       <h1>My Giving</h1>

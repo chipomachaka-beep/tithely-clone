@@ -333,8 +333,74 @@ a {
 
 /* Give page */
 .give-card {
-  max-width: 620px;
+  max-width: 960px;
   margin: 0 auto;
+}
+
+/* Choices on the left, summary on the right; stacked on phones. */
+.give-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .give-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.give-summary {
+  position: sticky;
+  top: 1.5rem;
+  margin-top: 1.5rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(27, 42, 74, 0.08);
+}
+
+.give-summary-title {
+  font-size: 0.85rem;
+  font-family: var(--font-body), system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.give-summary-amount {
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+  margin: 0.25rem 0 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.give-summary-details {
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+}
+
+.give-summary-details div {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+  font-size: 0.95rem;
+}
+
+.give-summary-details dt {
+  color: var(--muted);
+}
+
+.give-summary-details dd {
+  color: var(--navy);
+  font-weight: 600;
 }
 
 .verse-ref {
@@ -362,6 +428,10 @@ a {
   color: var(--navy);
   cursor: pointer;
   font-family: inherit;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .amount-button {
@@ -374,6 +444,20 @@ a {
 .amount-button:hover,
 .fund-button:hover {
   border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(27, 42, 74, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amount-button,
+  .fund-button {
+    transition: none;
+  }
+
+  .amount-button:hover,
+  .fund-button:hover {
+    transform: none;
+  }
 }
 
 .amount-button[aria-pressed="true"],
@@ -447,7 +531,7 @@ a {
 
 .give-submit {
   width: 100%;
-  margin-top: 2rem;
+  margin-top: 1.25rem;
   padding: 1.1rem;
   font-size: 1.3rem;
 }
@@ -606,4 +690,59 @@ a {
 .step p {
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+/* Thank-you message after giving */
+.thank-you {
+  text-align: center;
+  background: #f1f8f4;
+  border: 1px solid #cfe6d8;
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.thank-you-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: #2f7a52;
+  color: var(--white);
+  animation: pop-in 0.4s ease-out;
+}
+
+.thank-you-check svg {
+  width: 44px;
+  height: 44px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.thank-you h2 {
+  color: #24593f;
+  font-size: 1.6rem;
+  margin-top: 0.9rem;
+}
+
+@keyframes pop-in {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thank-you-check {
+    animation: none;
+  }
 }
