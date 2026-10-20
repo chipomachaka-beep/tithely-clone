@@ -293,3 +293,168 @@ a {
   font-size: 1.8rem;
   font-weight: 600;
 }
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-large {
+  padding: 1rem 2rem;
+  font-size: 1.15rem;
+}
+
+.notice-success {
+  background: #e9f3ee;
+  color: #24593f;
+  border-left: 4px solid #2f7a52;
+  border-radius: var(--radius);
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+/* Home page */
+.hero {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.hero h1 {
+  font-size: 2.6rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Give page */
+.give-card {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.verse-ref {
+  display: block;
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+.give-step {
+  font-size: 1.3rem;
+  margin: 1.5rem 0 0.8rem;
+}
+
+.amount-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+
+.amount-button,
+.fund-button {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--navy);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.amount-button {
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  padding: 1.1rem 0.5rem;
+}
+
+.amount-button:hover,
+.fund-button:hover {
+  border-color: var(--gold);
+}
+
+.amount-button[aria-pressed="true"],
+.fund-button[aria-pressed="true"] {
+  background: var(--navy);
+  border-color: var(--gold);
+  color: var(--white);
+  box-shadow: 0 0 0 2px var(--gold);
+}
+
+.custom-amount {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.custom-amount-field {
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 0.9rem;
+}
+
+.custom-amount-field:focus-within {
+  border-color: var(--gold);
+}
+
+.dollar-sign {
+  color: var(--navy);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.custom-amount-field input {
+  border: none;
+  outline: none;
+  font: inherit;
+  font-size: 1.3rem;
+  padding: 0.7rem 0.4rem;
+  width: 100%;
+}
+
+.fund-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.fund-button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  padding: 1rem 1.1rem;
+  text-align: left;
+}
+
+.fund-button-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.fund-button-description {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.give-submit {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1.1rem;
+  font-size: 1.3rem;
+}
+
+.demo-note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+}

@@ -1,8 +1,10 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatMoney, formatDate, FUND_LABELS } from "@/lib/format";
 
-export default async function HistoryPage() {
+export default async function HistoryPage({ searchParams }) {
+  const { gave } = await searchParams;
   const supabase = await createClient();
 
   // Only signed-in people have a giving history.
@@ -29,6 +31,12 @@ export default async function HistoryPage() {
 
   return (
     <section>
+      {gave && (
+        <p className="notice-success">
+          Thank you! Your gift has been recorded.
+        </p>
+      )}
+
       <h1>My Giving</h1>
       <p className="lead">Thank you for your faithful generosity.</p>
 
@@ -38,7 +46,9 @@ export default async function HistoryPage() {
       </div>
 
       {donations.length === 0 ? (
-        <p>You haven&apos;t given yet.</p>
+        <p>
+          You haven&apos;t given yet. <Link href="/give">Give now</Link>
+        </p>
       ) : (
         <div className="table-wrap">
           <table className="table">

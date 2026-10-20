@@ -35,6 +35,9 @@ export default async function SiteHeader() {
                 Log out
               </button>
             </form>
+            <Link href="/give" className="button button-gold button-small">
+              Give
+            </Link>
           </>
         ) : (
           <>
