@@ -56,6 +56,8 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
 }
 
 .brand {
@@ -182,4 +184,112 @@ a {
 .fund-building {
   background: #e9f3ee;
   color: #24593f;
+}
+
+.button-small {
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Header navigation */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.nav a,
+.nav-button {
+  color: var(--white);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.nav a:hover,
+.nav-button:hover {
+  color: var(--gold);
+}
+
+.nav .button-gold {
+  color: var(--navy);
+}
+
+.nav .button-gold:hover {
+  color: var(--navy);
+}
+
+.nav-name {
+  color: var(--gold);
+  font-size: 0.95rem;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Login and signup */
+.auth-card {
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.form input {
+  font: inherit;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.form input:focus {
+  outline: 2px solid var(--gold);
+  border-color: var(--gold);
+}
+
+.auth-switch {
+  color: var(--muted);
+}
+
+/* Summary number cards */
+.stat-card {
+  display: inline-flex;
+  flex-direction: column;
+  background: var(--gold-soft);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat-value {
+  font-family: var(--font-heading), Georgia, serif;
+  color: var(--navy);
+  font-size: 1.8rem;
+  font-weight: 600;
 }

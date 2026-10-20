@@ -1,5 +1,5 @@
 import { Inter, Source_Serif_4 } from "next/font/google";
-import Link from "next/link";
+import SiteHeader from "@/components/SiteHeader";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-body", subsets: ["latin"] });
@@ -14,11 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.variable} ${serif.variable}`}>
-        <header className="site-header">
-          <Link href="/" className="brand">
-            <span className="brand-mark">✝</span> Grace Church Giving
-          </Link>
-        </header>
+        <SiteHeader />
         <main className="container">{children}</main>
         <footer className="site-footer">
           Demo app for a bootcamp. No real payments are processed.

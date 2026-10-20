@@ -18,7 +18,7 @@ export default async function DashboardPage() {
   return (
     <section>
       <h1>All Gifts</h1>
-      <p className="lead">Every donation given to Grace Church.</p>
+      <p className="lead">Every donation given to Invitation Hill SDA Church.</p>
 
       {donations.length === 0 ? (
         <p>No donations yet.</p>
