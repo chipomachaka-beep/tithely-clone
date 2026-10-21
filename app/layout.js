@@ -1,6 +1,7 @@
 import { Inter, Source_Serif_4 } from "next/font/google";
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
+import { CHURCH } from "@/lib/church";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-body", subsets: ["latin"] });
@@ -21,12 +22,12 @@ export default function RootLayout({ children }) {
           <div className="footer-inner">
             <div>
               <p className="footer-name">
-                <span className="brand-mark">✝</span> Invitation Hill SDA Church
+                <span className="brand-mark">✝</span> {CHURCH.name}
               </p>
               <address className="footer-address">
-                10730 Highway 10
+                {CHURCH.street}
                 <br />
-                Dickinson, ND
+                {CHURCH.cityStateZip}
               </address>
             </div>
             <nav className="footer-links" aria-label="Footer">

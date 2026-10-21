@@ -1,8 +1,11 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatMoney, formatDate, FUND_LABELS } from "@/lib/format";
+import { sendReceipt } from "./actions";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }) {
+  const { error: receiptError } = await searchParams;
   const supabase = await createClient();
 
   // Only treasurers may see this page. Everyone else goes to their own history.
@@ -26,7 +29,9 @@ export default async function DashboardPage() {
   // Get every donation, newest first, along with the giver's name from profiles.
   const { data: donations, error } = await supabase
     .from("donations")
-    .select("id, user_id, amount, fund, given_on, profiles(full_name)")
+    .select(
+      "id, user_id, amount, fund, given_on, receipt_number, profiles(full_name)"
+    )
     .order("given_on", { ascending: false })
     .order("created_at", { ascending: false });
 
@@ -112,6 +117,7 @@ export default async function DashboardPage() {
       </ul>
 
       <h2 className="section-heading">All Gifts</h2>
+      {receiptError && <p className="error">{receiptError}</p>}
       {donations.length === 0 ? (
         <p>No donations yet.</p>
       ) : (
@@ -123,19 +129,34 @@ export default async function DashboardPage() {
                 <th>Giver</th>
                 <th>Fund</th>
                 <th className="num">Amount</th>
+                <th>Receipt</th>
               </tr>
             </thead>
             <tbody>
               {donations.map((d) => (
                 <tr key={d.id}>
-                  <td>{formatDate(d.given_on)}</td>
-                  <td>{d.profiles?.full_name}</td>
-                  <td>
+                  <td className="cell-date">{formatDate(d.given_on)}</td>
+                  <td className="cell-giver">{d.profiles?.full_name}</td>
+                  <td className="cell-fund">
                     <span className={`fund-tag fund-${d.fund}`}>
                       {FUND_LABELS[d.fund]}
                     </span>
                   </td>
-                  <td className="num">{formatMoney(d.amount)}</td>
+                  <td className="num cell-amount">{formatMoney(d.amount)}</td>
+                  <td className="cell-receipt">
+                    {d.receipt_number ? (
+                      <Link href={`/receipt/${d.id}`} className="receipt-sent">
+                        Receipt sent · {d.receipt_number}
+                      </Link>
+                    ) : (
+                      <form action={sendReceipt}>
+                        <input type="hidden" name="donation_id" value={d.id} />
+                        <button type="submit" className="button button-small">
+                          Send receipt
+                        </button>
+                      </form>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

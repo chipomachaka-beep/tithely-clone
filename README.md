@@ -5,6 +5,8 @@ A bootcamp demo that rebuilds the core of Tithely Giving:
 - **Give a donation:** pick an amount and a fund (Tithe, Offering, or Building Fund).
 - **See my giving history:** each member sees only their own gifts and total.
 - **Treasurer dashboard:** the treasurer sees every gift plus totals per fund.
+- **Receipts:** the treasurer sends a numbered receipt (IH-2026-0001) for a gift;
+  the donor views and prints it from My Giving. No email is sent.
 
 **Payments are faked.** Clicking "Give" records the donation in the database; no card is charged.
 
@@ -34,6 +36,7 @@ Then run these files in **SQL Editor**, in order:
 | `supabase/policies.sql` | Security rules: members see their own gifts, treasurers see all |
 | `supabase/seed.sql` | Sample gifts (create `maria@example.com` and `james@example.com` first) |
 | `supabase/make-treasurer.sql` | Makes `treasurer@example.com` the treasurer (create that user first) |
+| `supabase/receipts.sql` | Adds receipt numbers; only the treasurer can issue receipts |
 
 Helpers, only if needed:
 

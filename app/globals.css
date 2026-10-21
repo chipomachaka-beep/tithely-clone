@@ -932,6 +932,220 @@ a {
 }
 
 /* ============================================================
+   Receipts: table cells, and the receipt page itself
+   ============================================================ */
+.receipt-sent {
+  color: var(--green-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.receipt-sent::before {
+  content: "✓ ";
+}
+
+.receipt-sent:hover {
+  text-decoration: underline;
+}
+
+.receipt-pending {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.cell-receipt a {
+  font-size: 0.9rem;
+}
+
+.receipt-page {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.receipt-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.receipt {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 6px solid var(--navy);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-xl) 2.75rem;
+}
+
+.receipt-header {
+  text-align: center;
+  padding-bottom: var(--space-lg);
+  border-bottom: 2px solid var(--gold);
+}
+
+.receipt-cross {
+  color: var(--gold-dark);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.receipt-church {
+  font-size: 1.7rem;
+  margin: 0.3rem 0 0.2rem;
+}
+
+.receipt-address {
+  font-style: normal;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.receipt-title {
+  text-align: center;
+  font-size: 0.85rem;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin: var(--space-lg) 0;
+}
+
+.receipt-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.receipt-meta div:last-child {
+  text-align: right;
+}
+
+.receipt-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.receipt-value {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.receipt-lines {
+  border-top: 1px solid var(--border);
+}
+
+.receipt-lines div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.receipt-lines dt {
+  color: var(--muted);
+}
+
+.receipt-lines dd {
+  color: var(--text);
+  font-weight: 600;
+  text-align: right;
+}
+
+.receipt-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-md) 0 var(--space-lg);
+}
+
+.receipt-total-label {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.receipt-total-value {
+  font-family: var(--font-heading), Georgia, serif;
+  color: var(--navy);
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.receipt-thanks {
+  text-align: center;
+  font-family: var(--font-heading), Georgia, serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--navy-light);
+  padding-top: var(--space-lg);
+  border-top: 2px solid var(--gold);
+}
+
+.receipt-note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: var(--space-md);
+}
+
+/* When printing (or saving as PDF): only the receipt, plain and crisp. */
+@media print {
+  @page {
+    margin: 0.75in;
+  }
+
+  body {
+    background: var(--white);
+  }
+
+  .site-header,
+  .site-footer,
+  .receipt-actions,
+  nextjs-portal {
+    display: none !important;
+  }
+
+  .container {
+    padding: 0;
+    max-width: none;
+  }
+
+  .receipt-page {
+    max-width: none;
+  }
+
+  .receipt {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  .receipt-header,
+  .receipt-thanks {
+    border-color: #999;
+  }
+
+  .receipt,
+  .receipt * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* ============================================================
    Tablets and phones
    ============================================================ */
 @media (max-width: 760px) {
@@ -1028,8 +1242,9 @@ a {
     padding: 0.65rem 0.6rem;
   }
 
-  /* Dashboard gift list: each gift becomes a two-line row on phones.
-     Top line: giver and amount. Bottom line: date and fund. */
+  /* Gift lists: each gift becomes a small stacked row on phones.
+     Dashboard: giver and amount, then date and fund, then the receipt.
+     My Giving: fund and amount, then date and receipt. */
   .table-stack {
     font-size: 0.95rem;
   }
@@ -1041,9 +1256,20 @@ a {
   .table-stack tr {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.2rem var(--space-sm);
+    grid-template-areas:
+      "giver amount"
+      "date fund"
+      "receipt receipt";
+    gap: 0.25rem var(--space-sm);
+    align-items: center;
     padding: var(--space-sm) var(--space-md);
     border-bottom: 1px solid var(--border);
+  }
+
+  .table-stack-mine tr {
+    grid-template-areas:
+      "fund amount"
+      "date receipt";
   }
 
   .table-stack tr:last-child {
@@ -1055,25 +1281,40 @@ a {
     border: none;
   }
 
-  .table-stack td:nth-child(1) {
-    grid-area: 2 / 1;
+  .table-stack .cell-date {
+    grid-area: date;
     color: var(--muted);
     font-size: 0.85rem;
   }
 
-  .table-stack td:nth-child(2) {
-    grid-area: 1 / 1;
+  .table-stack .cell-giver {
+    grid-area: giver;
     color: var(--navy);
     font-weight: 600;
   }
 
-  .table-stack td:nth-child(3) {
-    grid-area: 2 / 2;
+  .table-stack .cell-fund {
+    grid-area: fund;
     text-align: right;
   }
 
-  .table-stack td:nth-child(4) {
-    grid-area: 1 / 2;
+  .table-stack-mine .cell-fund {
+    text-align: left;
+  }
+
+  .table-stack .cell-amount {
+    grid-area: amount;
+  }
+
+  .table-stack .cell-receipt {
+    grid-area: receipt;
+    padding-top: 0.25rem;
+    font-size: 0.85rem;
+  }
+
+  .table-stack-mine .cell-receipt {
+    padding-top: 0;
+    text-align: right;
   }
 
   .amount-button {
@@ -1087,6 +1328,23 @@ a {
 
   .bar-chart {
     padding: var(--space-md);
+  }
+
+  .receipt {
+    padding: var(--space-lg) 1.25rem;
+  }
+
+  .receipt-church {
+    font-size: 1.4rem;
+  }
+
+  .receipt-meta {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-sm);
+  }
+
+  .receipt-meta div:last-child {
+    text-align: left;
   }
 
   .bar-row {

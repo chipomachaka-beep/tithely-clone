@@ -18,7 +18,7 @@ export default async function HistoryPage({ searchParams }) {
   // Just this person's gifts, newest first.
   const { data: donations, error } = await supabase
     .from("donations")
-    .select("id, amount, fund, given_on")
+    .select("id, amount, fund, given_on, receipt_number")
     .eq("user_id", user.id)
     .order("given_on", { ascending: false })
     .order("created_at", { ascending: false });
@@ -73,24 +73,32 @@ export default async function HistoryPage({ searchParams }) {
         </p>
       ) : (
         <div className="table-wrap">
-          <table className="table">
+          <table className="table table-stack table-stack-mine">
             <thead>
               <tr>
                 <th>Date</th>
                 <th>Fund</th>
                 <th className="num">Amount</th>
+                <th>Receipt</th>
               </tr>
             </thead>
             <tbody>
               {donations.map((d) => (
                 <tr key={d.id}>
-                  <td>{formatDate(d.given_on)}</td>
-                  <td>
+                  <td className="cell-date">{formatDate(d.given_on)}</td>
+                  <td className="cell-fund">
                     <span className={`fund-tag fund-${d.fund}`}>
                       {FUND_LABELS[d.fund]}
                     </span>
                   </td>
-                  <td className="num">{formatMoney(d.amount)}</td>
+                  <td className="num cell-amount">{formatMoney(d.amount)}</td>
+                  <td className="cell-receipt">
+                    {d.receipt_number ? (
+                      <Link href={`/receipt/${d.id}`}>View receipt</Link>
+                    ) : (
+                      <span className="receipt-pending">Receipt pending</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
