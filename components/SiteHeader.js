@@ -6,7 +6,7 @@ import UserMenu from "./UserMenu";
 
 // Top bar. Shows different links depending on who is signed in:
 // - visitors: Log in, Sign up
-// - members: My Giving, their name, Log out, Give
+// - members: Home, My Giving, Give, their name, Log out
 // - the treasurer: their name (opens My Giving and Log out), Give,
 //   and a second row of tabs for the treasurer's pages
 export default async function SiteHeader() {
@@ -45,16 +45,17 @@ export default async function SiteHeader() {
 
           {user && !isTreasurer && (
             <>
+              <Link href="/">Home</Link>
               <Link href="/history">My Giving</Link>
+              <Link href="/give" className="button button-green button-small">
+                Give
+              </Link>
               <span className="nav-name">{profile?.full_name}</span>
               <form action={logout}>
-                <button type="submit" className="nav-button">
+                <button type="submit" className="nav-logout">
                   Log out
                 </button>
               </form>
-              <Link href="/give" className="button button-gold button-small">
-                Give
-              </Link>
             </>
           )}
 

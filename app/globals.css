@@ -148,6 +148,39 @@ a {
   color: var(--navy);
 }
 
+.nav .button-green,
+.nav .button-green:hover {
+  color: var(--white);
+}
+
+/* On the navy header, a light green edge keeps the button's outline clear. */
+.nav .button-green {
+  box-shadow: 0 0 0 1px #8fd3ad;
+}
+
+/* Log out: soft red outline. The light red text is about 8:1 against the navy. */
+.nav-logout {
+  background: none;
+  border: 1px solid rgba(255, 180, 171, 0.6);
+  border-radius: var(--radius-sm);
+  color: #ffb4ab;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+}
+
+.nav-logout:hover {
+  background: rgba(255, 180, 171, 0.14);
+  color: #ffd2cc;
+}
+
+.nav-logout:focus-visible {
+  outline: 2px solid #ffb4ab;
+  outline-offset: 2px;
+}
+
 .nav-name {
   color: var(--gold);
   font-size: 0.95rem;
@@ -255,6 +288,16 @@ a {
   opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
+}
+
+/* Members' Give button. White on this green is about 5.4:1 contrast. */
+.button-green {
+  background: var(--green);
+  color: var(--white);
+}
+
+.button-green:hover {
+  background: var(--green-dark);
 }
 
 .button-small {
@@ -1493,6 +1536,123 @@ a {
 }
 
 /* ============================================================
+   Member welcome page
+   ============================================================ */
+.welcome-hero {
+  text-align: center;
+  background: linear-gradient(180deg, var(--gold-soft) 0%, #fbf7ee 100%);
+  border: 1px solid #efe3c8;
+  border-radius: var(--radius);
+  padding: var(--space-xl) var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.welcome-hero h1 {
+  font-size: 2.4rem;
+  margin-bottom: var(--space-sm);
+}
+
+.welcome-hero .hero-verse {
+  margin-bottom: var(--space-md);
+}
+
+.welcome-thanks {
+  color: var(--muted);
+  font-size: 1.15rem;
+}
+
+.welcome-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-md);
+}
+
+.welcome-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--gold);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-lg);
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.welcome-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.welcome-card-give {
+  border-top-color: var(--green);
+}
+
+.welcome-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--gold);
+  margin-bottom: var(--space-xs);
+}
+
+.welcome-card-give .welcome-card-icon {
+  background: var(--green);
+  color: var(--white);
+}
+
+.welcome-card-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.welcome-card-title {
+  font-family: var(--font-heading), Georgia, serif;
+  color: var(--navy);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.welcome-card-number {
+  font-family: var(--font-heading), Georgia, serif;
+  color: var(--navy);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.welcome-card-text {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.welcome-card-cta {
+  margin-top: auto;
+  padding-top: var(--space-sm);
+  color: var(--navy-light);
+  font-weight: 600;
+}
+
+.welcome-card-give .welcome-card-cta {
+  color: var(--green-dark);
+}
+
+/* ============================================================
    Tablets and phones
    ============================================================ */
 @media (max-width: 760px) {
@@ -1548,6 +1708,18 @@ a {
 
   .hero h1 {
     font-size: 2rem;
+  }
+
+  .welcome-hero {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .welcome-hero h1 {
+    font-size: 1.75rem;
+  }
+
+  .nav-logout {
+    padding: 0.3rem 0.7rem;
   }
 
   .hero-verse {
@@ -1770,7 +1942,8 @@ a {
   }
 
   .amount-button:hover,
-  .fund-button:hover {
+  .fund-button:hover,
+  .welcome-card:hover {
     transform: none;
   }
 

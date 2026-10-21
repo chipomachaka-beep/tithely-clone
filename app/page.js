@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import MemberWelcome from "@/components/MemberWelcome";
 
 // Simple line icons drawn with SVG. They use the text color (set to gold in CSS).
 function HeartIcon() {
@@ -62,7 +64,16 @@ const STEPS = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  // Logged in? Show your own welcome page instead of the public one.
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    return <MemberWelcome supabase={supabase} user={user} />;
+  }
+
   return (
     <>
       <section className="hero">
