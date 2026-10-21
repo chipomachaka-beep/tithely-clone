@@ -5,7 +5,8 @@ import {
   CATEGORY_LABELS,
 } from "@/lib/format";
 import { requireTreasurer, loadPayments } from "@/lib/treasurer";
-import { recordPayment } from "./actions";
+import DeleteButton from "@/components/DeleteButton";
+import { recordPayment, deletePayment } from "./actions";
 
 export const metadata = {
   title: "Pay Bills",
@@ -15,7 +16,7 @@ export const metadata = {
 const COMMON_PAYEES = ["MDU", "City of Dickinson"];
 
 export default async function PayBillsPage({ searchParams }) {
-  const { error, paid } = await searchParams;
+  const { error, paid, deleted } = await searchParams;
   const { supabase } = await requireTreasurer();
   const payments = await loadPayments(supabase);
 
@@ -27,6 +28,11 @@ export default async function PayBillsPage({ searchParams }) {
       {paid && (
         <p className="notice" role="status">
           Payment recorded. Demo only: no money was sent.
+        </p>
+      )}
+      {deleted && (
+        <p className="notice" role="status">
+          Payment deleted.
         </p>
       )}
 
@@ -129,6 +135,9 @@ export default async function PayBillsPage({ searchParams }) {
                 <th>From fund</th>
                 <th className="num">Amount</th>
                 <th>Recorded by</th>
+                <th>
+                  <span className="visually-hidden">Actions</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -147,6 +156,13 @@ export default async function PayBillsPage({ searchParams }) {
                   </td>
                   <td className="num cell-amount">−{formatMoney(p.amount)}</td>
                   <td className="cell-recorder">{p.profiles?.full_name}</td>
+                  <td className="cell-actions">
+                    <DeleteButton
+                      action={deletePayment}
+                      id={p.id}
+                      what={`the ${formatMoney(p.amount)} payment to ${p.payee}`}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { formatMoney, formatDate, formatMethod, FUND_LABELS } from "@/lib/format";
 import { requireTreasurer, loadGifts } from "@/lib/treasurer";
-import { sendReceipt } from "./actions";
+import DeleteButton from "@/components/DeleteButton";
+import { sendReceipt, deleteGift } from "./actions";
 
 export const metadata = {
   title: "Gifts",
 };
 
 export default async function GiftsPage({ searchParams }) {
-  const { error, recorded } = await searchParams;
+  const { error, recorded, deleted } = await searchParams;
   const { supabase } = await requireTreasurer();
   const gifts = await loadGifts(supabase);
 
@@ -29,6 +30,11 @@ export default async function GiftsPage({ searchParams }) {
       {recorded && (
         <p className="notice" role="status">
           Envelope gift recorded under the member&apos;s name.
+        </p>
+      )}
+      {deleted && (
+        <p className="notice" role="status">
+          Gift deleted.
         </p>
       )}
       {error && <p className="error">{error}</p>}
@@ -68,12 +74,23 @@ export default async function GiftsPage({ searchParams }) {
                         Receipt sent · {d.receipt_number}
                       </Link>
                     ) : (
-                      <form action={sendReceipt}>
-                        <input type="hidden" name="donation_id" value={d.id} />
-                        <button type="submit" className="button button-small">
-                          Send receipt
-                        </button>
-                      </form>
+                      <div className="row-actions">
+                        <form action={sendReceipt}>
+                          <input type="hidden" name="donation_id" value={d.id} />
+                          <button type="submit" className="button button-small">
+                            Send receipt
+                          </button>
+                        </form>
+                        {/* Only envelope gifts (cash or check) can be deleted, and only
+                            before a receipt is sent. */}
+                        {d.method !== "online" && (
+                          <DeleteButton
+                            action={deleteGift}
+                            id={d.id}
+                            what={`${d.profiles?.full_name}'s ${formatMoney(d.amount)} gift`}
+                          />
+                        )}
+                      </div>
                     )}
                   </td>
                 </tr>

@@ -1653,6 +1653,55 @@ a {
 }
 
 /* ============================================================
+   Delete buttons (treasurer)
+   ============================================================ */
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.delete-form {
+  display: inline;
+}
+
+/* Quiet red text button, so it doesn't compete with Send receipt. */
+.delete-button {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--red);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  border-color: #f3c7c2;
+  background: #fdf1f0;
+}
+
+.delete-button:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.cell-actions {
+  text-align: right;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ============================================================
    Tablets and phones
    ============================================================ */
 @media (max-width: 760px) {
@@ -1802,7 +1851,16 @@ a {
     grid-template-areas:
       "payee amount"
       "date fund"
-      "category recorder";
+      "category recorder"
+      "actions actions";
+  }
+
+  .table-stack .cell-actions {
+    grid-area: actions;
+  }
+
+  .table-stack .row-actions {
+    justify-content: flex-end;
   }
 
   .table-stack .cell-payee {

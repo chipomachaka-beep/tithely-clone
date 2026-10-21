@@ -48,6 +48,7 @@ Then run these files in **SQL Editor**, in order:
 | `supabase/receipts.sql` | Adds receipt numbers; only the treasurer can issue receipts |
 | `supabase/payments.sql` | Adds bill payments; only the treasurer can see or record them |
 | `supabase/payment-methods.sql` | Adds online / cash / check; only the treasurer can record gifts for others |
+| `supabase/delete-rules.sql` | Treasurer can delete payments, and envelope gifts with no receipt yet |
 
 If you re-run an earlier file later, run the files after it again too: some later
 files replace security rules from earlier ones.

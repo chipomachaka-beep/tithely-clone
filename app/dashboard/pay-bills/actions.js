@@ -54,3 +54,23 @@ export async function recordPayment(formData) {
   revalidatePath("/dashboard", "layout");
   redirect("/dashboard/pay-bills?paid=1");
 }
+
+// Treasurer action: delete a recorded bill payment.
+// The database rules (supabase/delete-rules.sql) only let the treasurer do this.
+export async function deletePayment(formData) {
+  const { supabase } = await requireTreasurer();
+
+  const { data, error } = await supabase
+    .from("payments")
+    .delete()
+    .eq("id", formData.get("id"))
+    .select("id");
+
+  if (error || data.length === 0) {
+    const reason = error ? error.message : "That payment could not be deleted.";
+    redirect(`/dashboard/pay-bills?error=${encodeURIComponent(reason)}`);
+  }
+
+  revalidatePath("/dashboard", "layout");
+  redirect("/dashboard/pay-bills?deleted=1");
+}
