@@ -9,7 +9,7 @@ import {
   formatMethod,
   FUND_LABELS,
 } from "@/lib/format";
-import PrintButton from "./PrintButton";
+import PrintButton from "@/components/PrintButton";
 
 export const metadata = {
   title: "Giving Receipt",

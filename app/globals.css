@@ -1156,7 +1156,9 @@ a {
 
   .site-header,
   .site-footer,
+  .treasurer-nav,
   .receipt-actions,
+  .notice-preview,
   nextjs-portal {
     display: none !important;
   }
@@ -1702,6 +1704,204 @@ a {
 }
 
 /* ============================================================
+   Gifts grouped by month (My Giving and the treasurer's Gifts)
+   ============================================================ */
+.month-group {
+  margin-bottom: var(--space-md);
+}
+
+.month-summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-md);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.month-summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Arrow before the month name: points right when closed, down when open. */
+.month-title::before {
+  content: "▸";
+  display: inline-block;
+  width: 1.1rem;
+  color: var(--gold-dark);
+  transition: transform 0.15s ease;
+}
+
+.month-group[open] .month-title::before {
+  transform: rotate(90deg);
+}
+
+.month-title {
+  color: var(--text);
+}
+
+.month-title strong {
+  color: var(--navy);
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 1.1rem;
+}
+
+.month-summary:hover {
+  border-color: var(--gold);
+}
+
+.month-group[open] > .month-summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.month-group > .table-wrap,
+.month-group > .statement-list {
+  border-top: none;
+  border-radius: 0;
+}
+
+.month-group > :last-child {
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.month-statement {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.9rem;
+}
+
+.statement-ready {
+  color: var(--green-dark);
+  font-weight: 600;
+}
+
+.statement-ready::before {
+  content: "✓ ";
+}
+
+.statement-pending {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Treasurer: one row per member who gave that month */
+.statement-list {
+  list-style: none;
+  background: var(--gold-soft);
+  border: 1px solid var(--border);
+  border-top: none;
+}
+
+.statement-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-md);
+  padding: 0.6rem var(--space-md);
+  border-bottom: 1px solid #eadfc6;
+}
+
+.statement-row:last-child {
+  border-bottom: none;
+}
+
+.statement-giver {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem var(--space-xs);
+  color: var(--navy);
+}
+
+.statement-giver-detail {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.preview-link {
+  font-size: 0.9rem;
+}
+
+.member-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: var(--space-lg);
+}
+
+.member-filter select {
+  font: inherit;
+  font-weight: 400;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--text);
+  min-width: 200px;
+}
+
+.member-filter select:focus {
+  outline: 2px solid var(--gold);
+  border-color: var(--gold);
+}
+
+/* Statement page: the list of gifts in the month */
+.statement-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-md);
+}
+
+.statement-table th,
+.statement-table td {
+  text-align: left;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.statement-table th {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.statement-table td {
+  font-size: 0.95rem;
+}
+
+.statement-table td + td,
+.statement-table th + th {
+  padding-left: var(--space-sm);
+}
+
+.statement-table .num {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.notice-preview {
+  background: var(--gold-soft);
+  color: #7a5c1e;
+  border-color: #eadfc6;
+  border-left-color: var(--gold);
+}
+
+/* ============================================================
    Tablets and phones
    ============================================================ */
 @media (max-width: 760px) {
@@ -1938,6 +2138,19 @@ a {
     padding: var(--space-md);
   }
 
+  .member-filter {
+    display: flex;
+  }
+
+  .member-filter select {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .statement-table {
+    font-size: 0.85rem;
+  }
+
   .treasurer-nav-inner {
     padding: 0 var(--space-xs);
   }
@@ -2003,6 +2216,10 @@ a {
   .fund-button:hover,
   .welcome-card:hover {
     transform: none;
+  }
+
+  .month-title::before {
+    transition: none;
   }
 
   .thank-you-check {

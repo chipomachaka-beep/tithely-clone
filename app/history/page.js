@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatMoney, formatDate, formatMethod, FUND_LABELS } from "@/lib/format";
+import { groupByMonth, giftCount } from "@/lib/months";
 
 export default async function HistoryPage({ searchParams }) {
   const { gave } = await searchParams;
@@ -26,6 +27,15 @@ export default async function HistoryPage({ searchParams }) {
   if (error) {
     return <p className="error">Could not load your gifts: {error.message}</p>;
   }
+
+  // Months the treasurer has sent this person a statement for, like "2026-10".
+  const { data: statements } = await supabase
+    .from("statements")
+    .select("month")
+    .eq("user_id", user.id);
+  const sentMonths = new Set((statements ?? []).map((s) => s.month));
+
+  const months = groupByMonth(donations);
 
   const total = donations.reduce((sum, d) => sum + Number(d.amount), 0);
 
@@ -72,42 +82,61 @@ export default async function HistoryPage({ searchParams }) {
           You haven&apos;t given yet. <Link href="/give">Give now</Link>
         </p>
       ) : (
-        <div className="table-wrap">
-          <table className="table table-stack table-stack-mine">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Fund</th>
-                <th>Method</th>
-                <th className="num">Amount</th>
-                <th>Receipt</th>
-              </tr>
-            </thead>
-            <tbody>
-              {donations.map((d) => (
-                <tr key={d.id}>
-                  <td className="cell-date">{formatDate(d.given_on)}</td>
-                  <td className="cell-fund">
-                    <span className={`fund-tag fund-${d.fund}`}>
-                      {FUND_LABELS[d.fund]}
-                    </span>
-                  </td>
-                  <td className="cell-method">
-                    {formatMethod(d.method, d.check_number)}
-                  </td>
-                  <td className="num cell-amount">{formatMoney(d.amount)}</td>
-                  <td className="cell-receipt">
-                    {d.receipt_number ? (
-                      <Link href={`/receipt/${d.id}`}>View receipt</Link>
-                    ) : (
-                      <span className="receipt-pending">Receipt pending</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        // One section per month, newest first. Only the newest starts open.
+        months.map((month, index) => (
+          <details key={month.key} className="month-group" open={index === 0}>
+            <summary className="month-summary">
+              <span className="month-title">
+                <strong>{month.name}</strong>: {giftCount(month.gifts.length)},{" "}
+                {formatMoney(month.total)}
+              </span>
+              {sentMonths.has(month.key) ? (
+                <span className="month-statement">
+                  <span className="statement-ready">Statement available</span>
+                  <Link href={`/statement/${month.key}`}>View statement</Link>
+                </span>
+              ) : (
+                <span className="statement-pending">Statement pending</span>
+              )}
+            </summary>
+            <div className="table-wrap">
+              <table className="table table-stack table-stack-mine">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Fund</th>
+                    <th>Method</th>
+                    <th className="num">Amount</th>
+                    <th>Receipt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {month.gifts.map((d) => (
+                    <tr key={d.id}>
+                      <td className="cell-date">{formatDate(d.given_on)}</td>
+                      <td className="cell-fund">
+                        <span className={`fund-tag fund-${d.fund}`}>
+                          {FUND_LABELS[d.fund]}
+                        </span>
+                      </td>
+                      <td className="cell-method">
+                        {formatMethod(d.method, d.check_number)}
+                      </td>
+                      <td className="num cell-amount">{formatMoney(d.amount)}</td>
+                      <td className="cell-receipt">
+                        {d.receipt_number ? (
+                          <Link href={`/receipt/${d.id}`}>View receipt</Link>
+                        ) : (
+                          <span className="receipt-pending">Receipt pending</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </details>
+        ))
       )}
     </section>
   );
