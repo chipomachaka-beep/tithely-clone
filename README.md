@@ -4,7 +4,12 @@ A bootcamp demo that rebuilds the core of Tithely Giving:
 
 - **Give a donation:** pick an amount and a fund (Tithe, Offering, or Building Fund).
 - **See my giving history:** each member sees only their own gifts and total.
-- **Treasurer dashboard:** the treasurer sees every gift plus totals per fund.
+- **Treasurer pages** (tabs under the header, treasurer only):
+  - **Overview:** each fund's balance (given minus paid out), and this month's money in and out.
+  - **Gifts:** every gift, with a Send receipt button.
+  - **Record Gift:** enter cash and check gifts from the offering envelope.
+  - **Pay Bills:** record bills paid from a fund, and see every payment made.
+  - **Reports:** totals by fund (bar chart), by payment method, and money in vs. out.
 - **Receipts:** the treasurer sends a numbered receipt (IH-2026-0001) for a gift;
   the donor views and prints it from My Giving. No email is sent.
 - **Bill payments:** the treasurer records bills paid from a fund (like MDU for

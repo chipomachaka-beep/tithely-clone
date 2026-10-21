@@ -43,7 +43,7 @@ export default async function ReceiptPage({ params }) {
   const backLink =
     gift.user_id === user.id
       ? { href: "/history", label: "← Back to My Giving" }
-      : { href: "/dashboard", label: "← Back to Dashboard" };
+      : { href: "/dashboard/gifts", label: "← Back to Gifts" };
 
   return (
     <section className="receipt-page">

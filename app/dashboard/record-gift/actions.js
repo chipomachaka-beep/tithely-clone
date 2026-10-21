@@ -4,19 +4,11 @@
 // under a member's name.
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-import { CHURCH } from "@/lib/church";
 import { FUND_LABELS } from "@/lib/format";
+import { requireTreasurer, churchToday } from "@/lib/treasurer";
 
 export async function recordEnvelopeGift(formData) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    redirect("/login");
-  }
+  const { supabase } = await requireTreasurer();
 
   // Check the form values before saving. The database checks these too (and
   // only lets the treasurer record gifts for others), but here we can show a
@@ -27,7 +19,7 @@ export async function recordEnvelopeGift(formData) {
   const method = formData.get("method");
   const checkNumber = String(formData.get("check_number") ?? "").trim();
   const givenOn = String(formData.get("given_on") ?? "");
-  const today = new Date().toLocaleDateString("en-CA", { timeZone: CHURCH.timeZone });
+  const today = churchToday();
 
   let problem = null;
   if (memberId === "") {
@@ -48,7 +40,7 @@ export async function recordEnvelopeGift(formData) {
     problem = "The gift date can't be in the future.";
   }
   if (problem) {
-    redirect(`/envelope?error=${encodeURIComponent(problem)}`);
+    redirect(`/dashboard/record-gift?error=${encodeURIComponent(problem)}`);
   }
 
   // Make sure the member exists (the treasurer can see every profile).
@@ -58,7 +50,7 @@ export async function recordEnvelopeGift(formData) {
     .eq("id", memberId)
     .maybeSingle();
   if (!member) {
-    redirect(`/envelope?error=${encodeURIComponent("That member could not be found.")}`);
+    redirect(`/dashboard/record-gift?error=${encodeURIComponent("That member could not be found.")}`);
   }
 
   const { error } = await supabase.from("donations").insert({
@@ -71,10 +63,10 @@ export async function recordEnvelopeGift(formData) {
   });
 
   if (error) {
-    redirect(`/envelope?error=${encodeURIComponent(`Could not record gift: ${error.message}`)}`);
+    redirect(`/dashboard/record-gift?error=${encodeURIComponent(`Could not record gift: ${error.message}`)}`);
   }
 
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
   revalidatePath("/history");
-  redirect("/dashboard?recorded=1");
+  redirect("/dashboard/gifts?recorded=1");
 }

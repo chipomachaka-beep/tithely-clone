@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/auth/actions";
+import TreasurerNav from "./TreasurerNav";
+import UserMenu from "./UserMenu";
 
-// Top bar. Shows different links depending on whether someone is signed in.
+// Top bar. Shows different links depending on who is signed in:
+// - visitors: Log in, Sign up
+// - members: My Giving, their name, Log out, Give
+// - the treasurer: their name (opens My Giving and Log out), Give,
+//   and a second row of tabs for the treasurer's pages
 export default async function SiteHeader() {
   const supabase = await createClient();
   const {
@@ -18,39 +24,52 @@ export default async function SiteHeader() {
       .single();
     profile = data;
   }
+  const isTreasurer = profile?.role === "treasurer";
 
   return (
-    <header className="site-header">
-      <Link href="/" className="brand">
-        <span className="brand-mark">✝</span> Invitation Hill SDA Church Giving
-      </Link>
+    <>
+      <header className="site-header">
+        <Link href="/" className="brand">
+          <span className="brand-mark">✝</span> Invitation Hill SDA Church Giving
+        </Link>
 
-      <nav className="nav">
-        {user ? (
-          <>
-            <Link href="/history">My Giving</Link>
-            {profile?.role === "treasurer" && (
-              <Link href="/dashboard">Dashboard</Link>
-            )}
-            <span className="nav-name">{profile?.full_name}</span>
-            <form action={logout}>
-              <button type="submit" className="nav-button">
-                Log out
-              </button>
-            </form>
-            <Link href="/give" className="button button-gold button-small">
-              Give
-            </Link>
-          </>
-        ) : (
-          <>
-            <Link href="/login">Log in</Link>
-            <Link href="/signup" className="button button-gold button-small">
-              Sign up
-            </Link>
-          </>
-        )}
-      </nav>
-    </header>
+        <nav className="nav">
+          {!user && (
+            <>
+              <Link href="/login">Log in</Link>
+              <Link href="/signup" className="button button-gold button-small">
+                Sign up
+              </Link>
+            </>
+          )}
+
+          {user && !isTreasurer && (
+            <>
+              <Link href="/history">My Giving</Link>
+              <span className="nav-name">{profile?.full_name}</span>
+              <form action={logout}>
+                <button type="submit" className="nav-button">
+                  Log out
+                </button>
+              </form>
+              <Link href="/give" className="button button-gold button-small">
+                Give
+              </Link>
+            </>
+          )}
+
+          {isTreasurer && (
+            <>
+              <UserMenu name={profile.full_name} logoutAction={logout} />
+              <Link href="/give" className="button button-gold button-small">
+                Give
+              </Link>
+            </>
+          )}
+        </nav>
+      </header>
+
+      {isTreasurer && <TreasurerNav />}
+    </>
   );
 }

@@ -15,10 +15,10 @@ export async function sendReceipt(formData) {
   });
 
   if (error) {
-    redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);
+    redirect(`/dashboard/gifts?error=${encodeURIComponent(error.message)}`);
   }
 
   revalidatePath("/history");
-  revalidatePath("/dashboard");
-  redirect("/dashboard");
+  revalidatePath("/dashboard", "layout");
+  redirect("/dashboard/gifts");
 }

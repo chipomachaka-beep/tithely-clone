@@ -4,19 +4,11 @@
 // Demo only: this saves a row in the database and never sends money.
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-import { CHURCH } from "@/lib/church";
 import { FUND_LABELS, CATEGORY_LABELS } from "@/lib/format";
+import { requireTreasurer, churchToday } from "@/lib/treasurer";
 
 export async function recordPayment(formData) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    redirect("/login");
-  }
+  const { supabase, user } = await requireTreasurer();
 
   // Check the form values before saving. The database checks these too
   // (and only lets the treasurer save), but here we can show a friendly message.
@@ -41,7 +33,7 @@ export async function recordPayment(formData) {
     problem = "Please keep the note to 200 characters or fewer.";
   }
   if (problem) {
-    redirect(`/pay?error=${encodeURIComponent(problem)}`);
+    redirect(`/dashboard/pay-bills?error=${encodeURIComponent(problem)}`);
   }
 
   const { error } = await supabase.from("payments").insert({
@@ -52,13 +44,13 @@ export async function recordPayment(formData) {
     note,
     recorded_by: user.id,
     // Today's date at the church (Mountain Time), as "2026-10-20".
-    paid_on: new Date().toLocaleDateString("en-CA", { timeZone: CHURCH.timeZone }),
+    paid_on: churchToday(),
   });
 
   if (error) {
-    redirect(`/pay?error=${encodeURIComponent(`Could not record payment: ${error.message}`)}`);
+    redirect(`/dashboard/pay-bills?error=${encodeURIComponent(`Could not record payment: ${error.message}`)}`);
   }
 
-  revalidatePath("/dashboard");
-  redirect("/dashboard?paid=1");
+  revalidatePath("/dashboard", "layout");
+  redirect("/dashboard/pay-bills?paid=1");
 }

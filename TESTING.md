@@ -22,24 +22,26 @@ one person. Use a normal window for the member and a private (incognito) window
 for the treasurer.
 
 1. **Treasurer, private window:** log in as `treasurer@example.com` and open
-   **Dashboard**. Write down the **All funds** total and the **Building Fund** total.
+   **Reports**. Write down the **All gifts** total and the **Building Fund** total.
 2. **Member, normal window:** log in as `maria@example.com` and click **Give**.
 3. Choose **$50** and **Building Fund**, then click **Give $50.00**.
-4. **Member:** you land on **My Giving** with "Thank you! Your gift has been
+4. **Member:** you land on **My Giving** with "Thank you, your gift has been
    recorded." The new $50.00 Building Fund gift is at the top, dated today.
-5. **Treasurer:** refresh the Dashboard.
+5. **Treasurer:** refresh **Reports**, then open **Gifts**.
 
 ## Expected result
 
-- **All funds** goes up by $50.00, and the gift count goes up by 1.
-- **Building Fund** goes up by $50.00.
-- The top row of **All Gifts** is today's date, Maria Lopez, Building Fund, $50.00.
+- On **Reports**, **All gifts** goes up by $50.00, and the gift count goes up by 1.
+- On **Reports**, **Building Fund** goes up by $50.00.
+- The top row on **Gifts** is today's date, Maria Lopez, Building Fund, Online, $50.00.
 
 ## Security checks
 
 - **Logged out:** visiting `/give`, `/history`, or `/dashboard` sends you to the login page.
 - **Member:** Maria's **My Giving** shows only her own gifts, never James's.
-- **Member:** Maria has no **Dashboard** link, and going to `/dashboard` sends her to **My Giving**.
+- **Member:** Maria sees only **My Giving** and **Give**, with no treasurer tabs. Going to
+  `/dashboard` or any page under it (Gifts, Record Gift, Pay Bills, Reports) sends her to
+  **My Giving**.
 
 ## Results
 

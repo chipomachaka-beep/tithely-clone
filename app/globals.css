@@ -1149,14 +1149,33 @@ a {
 /* ============================================================
    Bill payments: Pay a bill page and dashboard sections
    ============================================================ */
-.pay-card {
-  max-width: 560px;
+/* White card holding a form on the treasurer pages */
+.form-card {
+  max-width: 620px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-lg) 2rem;
 }
 
-.back-link {
-  display: inline-block;
-  font-size: 0.95rem;
-  margin-bottom: var(--space-md);
+.form-card .form {
+  margin-bottom: 0;
+}
+
+.form-card .give-submit {
+  margin-top: var(--space-xs);
+}
+
+.form-card .demo-note {
+  margin-top: 0;
+}
+
+/* Two fields side by side (one above the other on phones) */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
 }
 
 .form select {
@@ -1201,14 +1220,6 @@ a {
   font-weight: 400;
 }
 
-.pay-card .give-submit {
-  margin-top: var(--space-xs);
-}
-
-.pay-card .demo-note {
-  margin-top: 0;
-}
-
 .notice {
   background: var(--green-soft);
   color: var(--green-dark);
@@ -1232,7 +1243,8 @@ a {
   margin-bottom: 0;
 }
 
-.section-header-spaced {
+.section-header-spaced,
+.section-heading-spaced {
   margin-top: var(--space-xl);
 }
 
@@ -1240,7 +1252,8 @@ a {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-.fund-total-value.is-negative {
+.fund-total-value.is-negative,
+.table .is-negative {
   color: var(--red);
 }
 
@@ -1333,6 +1346,150 @@ a {
 
 .form input[type="date"] {
   min-height: 3rem;
+}
+
+/* ============================================================
+   Treasurer pages: tab bar, name menu, page layouts
+   ============================================================ */
+.treasurer-nav {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.treasurer-nav-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+}
+
+.treasurer-tab {
+  flex: none;
+  padding: 0.85rem 1rem 0.75rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+
+.treasurer-tab:hover {
+  color: var(--navy);
+  border-bottom-color: var(--gold-soft);
+}
+
+.treasurer-tab[aria-current="page"] {
+  color: var(--navy);
+  border-bottom-color: var(--gold);
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu summary {
+  list-style: none;
+  cursor: pointer;
+  color: var(--gold);
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.user-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.user-menu summary:hover {
+  color: var(--white);
+}
+
+.user-menu-caret {
+  font-size: 0.75rem;
+  transition: transform 0.15s ease;
+}
+
+.user-menu[open] .user-menu-caret {
+  transform: rotate(180deg);
+}
+
+.user-menu-list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.6rem);
+  min-width: 170px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  padding: 0.35rem;
+  z-index: 10;
+}
+
+.user-menu-list a,
+.user-menu-list button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--navy) !important;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-menu-list a:hover,
+.user-menu-list button:hover {
+  background: var(--gold-soft);
+}
+
+/* Title on the left, main button on the right */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.stat-card-in {
+  border-left-color: var(--green);
+}
+
+.stat-card-out {
+  border-left-color: var(--red);
+}
+
+.quick-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.quick-link {
+  font-weight: 600;
+}
+
+.in-out-table tfoot th,
+.in-out-table tfoot td {
+  background: var(--gold-soft);
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: none;
+  letter-spacing: 0;
+  border-bottom: none;
 }
 
 /* ============================================================
@@ -1549,6 +1706,27 @@ a {
 
   .bar-chart {
     padding: var(--space-md);
+  }
+
+  .treasurer-nav-inner {
+    padding: 0 var(--space-xs);
+  }
+
+  .treasurer-tab {
+    padding: 0.75rem 0.7rem 0.65rem;
+    font-size: 0.9rem;
+  }
+
+  .form-card {
+    padding: var(--space-lg) 1.25rem;
+  }
+
+  .form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-header .button {
+    margin-bottom: var(--space-lg);
   }
 
   .receipt {
