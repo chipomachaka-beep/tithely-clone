@@ -10,7 +10,9 @@ alter table public.donations
 
 -- 2. Donors must not be able to give themselves a receipt when they give.
 --    This replaces the "give as yourself" rule from policies.sql with a stricter one.
---    (If you ever re-run policies.sql, run this file again afterwards.)
+--    (If you ever re-run policies.sql, run this file again afterwards.
+--    payment-methods.sql later replaces this rule with a stricter one, so if
+--    you re-run this file, run payment-methods.sql again afterwards too.)
 drop policy if exists "give as yourself" on public.donations;
 create policy "give as yourself"
   on public.donations for insert to authenticated

@@ -1267,6 +1267,75 @@ a {
 }
 
 /* ============================================================
+   Payment methods and envelope gifts
+   ============================================================ */
+.cell-method {
+  color: var(--muted);
+}
+
+.method-totals {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.method-total {
+  border-left-color: var(--navy-light);
+}
+
+/* Cash / Check toggle on the envelope page */
+.segmented {
+  border: none;
+}
+
+.segmented legend {
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 0.35rem;
+}
+
+.segmented-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xs);
+}
+
+.segmented-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented-option span {
+  display: block;
+  text-align: center;
+  padding: 0.7rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--navy);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.segmented-option:hover span {
+  border-color: var(--gold);
+}
+
+.segmented-option input:checked + span {
+  background: var(--navy);
+  border-color: var(--gold);
+  color: var(--white);
+}
+
+.segmented-option input:focus-visible + span {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.form input[type="date"] {
+  min-height: 3rem;
+}
+
+/* ============================================================
    Tablets and phones
    ============================================================ */
 @media (max-width: 760px) {
@@ -1380,7 +1449,7 @@ a {
     grid-template-areas:
       "giver amount"
       "date fund"
-      "receipt receipt";
+      "method receipt";
     gap: 0.25rem var(--space-sm);
     align-items: center;
     padding: var(--space-sm) var(--space-md);
@@ -1390,7 +1459,13 @@ a {
   .table-stack-mine tr {
     grid-template-areas:
       "fund amount"
-      "date receipt";
+      "date receipt"
+      "method method";
+  }
+
+  .table-stack .cell-method {
+    grid-area: method;
+    font-size: 0.85rem;
   }
 
   /* Payments: payee and amount, then date and fund, then category and recorder. */
@@ -1455,6 +1530,7 @@ a {
     grid-area: receipt;
     padding-top: 0.25rem;
     font-size: 0.85rem;
+    text-align: right;
   }
 
   .table-stack-mine .cell-receipt {

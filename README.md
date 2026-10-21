@@ -9,6 +9,8 @@ A bootcamp demo that rebuilds the core of Tithely Giving:
   the donor views and prints it from My Giving. No email is sent.
 - **Bill payments:** the treasurer records bills paid from a fund (like MDU for
   electricity) and sees each fund's balance. Demo only: no money is sent.
+- **Payment methods:** every gift is Online, Cash, or Check (with check number).
+  The treasurer records cash and check envelope gifts under a member's name.
 
 **Payments are faked.** Clicking "Give" records the donation in the database; no card is charged.
 
@@ -40,6 +42,10 @@ Then run these files in **SQL Editor**, in order:
 | `supabase/make-treasurer.sql` | Makes `treasurer@example.com` the treasurer (create that user first) |
 | `supabase/receipts.sql` | Adds receipt numbers; only the treasurer can issue receipts |
 | `supabase/payments.sql` | Adds bill payments; only the treasurer can see or record them |
+| `supabase/payment-methods.sql` | Adds online / cash / check; only the treasurer can record gifts for others |
+
+If you re-run an earlier file later, run the files after it again too: some later
+files replace security rules from earlier ones.
 
 Helpers, only if needed:
 

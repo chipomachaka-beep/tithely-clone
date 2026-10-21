@@ -6,6 +6,7 @@ import {
   formatMoney,
   formatLongDate,
   formatLongDateAt,
+  formatMethod,
   FUND_LABELS,
 } from "@/lib/format";
 import PrintButton from "./PrintButton";
@@ -30,7 +31,7 @@ export default async function ReceiptPage({ params }) {
   const { data: gift } = await supabase
     .from("donations")
     .select(
-      "id, user_id, amount, fund, given_on, receipt_number, receipted_at, profiles(full_name)"
+      "id, user_id, amount, fund, given_on, method, check_number, receipt_number, receipted_at, profiles(full_name)"
     )
     .eq("id", id)
     .maybeSingle();
@@ -91,6 +92,10 @@ export default async function ReceiptPage({ params }) {
           <div>
             <dt>Fund</dt>
             <dd>{FUND_LABELS[gift.fund]}</dd>
+          </div>
+          <div>
+            <dt>Payment method</dt>
+            <dd>{formatMethod(gift.method, gift.check_number)}</dd>
           </div>
         </dl>
 

@@ -4,13 +4,15 @@ import { createClient } from "@/lib/supabase/server";
 import {
   formatMoney,
   formatDate,
+  formatMethod,
   FUND_LABELS,
+  METHOD_LABELS,
   CATEGORY_LABELS,
 } from "@/lib/format";
 import { sendReceipt } from "./actions";
 
 export default async function DashboardPage({ searchParams }) {
-  const { error: receiptError, paid } = await searchParams;
+  const { error: receiptError, paid, recorded } = await searchParams;
   const supabase = await createClient();
 
   // Only treasurers may see this page. Everyone else goes to their own history.
@@ -35,7 +37,7 @@ export default async function DashboardPage({ searchParams }) {
   const { data: donations, error } = await supabase
     .from("donations")
     .select(
-      "id, user_id, amount, fund, given_on, receipt_number, profiles(full_name)"
+      "id, user_id, amount, fund, given_on, method, check_number, receipt_number, profiles(full_name)"
     )
     .order("given_on", { ascending: false })
     .order("created_at", { ascending: false });
@@ -73,6 +75,14 @@ export default async function DashboardPage({ searchParams }) {
     }
   }
   const grandTotal = fundTotals.tithe + fundTotals.offering + fundTotals.building;
+
+  // Totals and gift counts for each way of giving.
+  const methodTotals = { online: 0, cash: 0, check: 0 };
+  const methodCounts = { online: 0, cash: 0, check: 0 };
+  for (const d of donations) {
+    methodTotals[d.method] += Number(d.amount);
+    methodCounts[d.method] += 1;
+  }
 
   // Balance for each fund: money given minus money paid out.
   const paidOut = { tithe: 0, offering: 0, building: 0 };
@@ -113,6 +123,12 @@ export default async function DashboardPage({ searchParams }) {
         </div>
       </div>
 
+      {recorded && (
+        <p className="notice" role="status">
+          Envelope gift recorded under the member&apos;s name.
+        </p>
+      )}
+
       {paid && (
         <p className="notice" role="status">
           Payment recorded. Demo only: no money was sent.
@@ -145,6 +161,21 @@ export default async function DashboardPage({ searchParams }) {
         })}
       </div>
 
+      <h2 className="section-heading">By Payment Method</h2>
+      <div className="fund-totals method-totals">
+        {Object.keys(METHOD_LABELS).map((method) => (
+          <div key={method} className="fund-total method-total">
+            <span className="stat-label">{METHOD_LABELS[method]}</span>
+            <span className="fund-total-value">
+              {formatMoney(methodTotals[method])}
+            </span>
+            <span className="stat-detail">
+              {methodCounts[method]} {methodCounts[method] === 1 ? "gift" : "gifts"}
+            </span>
+          </div>
+        ))}
+      </div>
+
       <h2 className="section-heading">Totals by Fund</h2>
       <ul className="bar-chart">
         {Object.keys(FUND_LABELS).map((fund) => {
@@ -170,7 +201,12 @@ export default async function DashboardPage({ searchParams }) {
         })}
       </ul>
 
-      <h2 className="section-heading">All Gifts</h2>
+      <div className="section-header">
+        <h2 className="section-heading">All Gifts</h2>
+        <Link href="/envelope" className="button button-gold button-small">
+          Record envelope gift
+        </Link>
+      </div>
       {receiptError && <p className="error">{receiptError}</p>}
       {donations.length === 0 ? (
         <p>No donations yet.</p>
@@ -182,6 +218,7 @@ export default async function DashboardPage({ searchParams }) {
                 <th>Date</th>
                 <th>Giver</th>
                 <th>Fund</th>
+                <th>Method</th>
                 <th className="num">Amount</th>
                 <th>Receipt</th>
               </tr>
@@ -195,6 +232,9 @@ export default async function DashboardPage({ searchParams }) {
                     <span className={`fund-tag fund-${d.fund}`}>
                       {FUND_LABELS[d.fund]}
                     </span>
+                  </td>
+                  <td className="cell-method">
+                    {formatMethod(d.method, d.check_number)}
                   </td>
                   <td className="num cell-amount">{formatMoney(d.amount)}</td>
                   <td className="cell-receipt">

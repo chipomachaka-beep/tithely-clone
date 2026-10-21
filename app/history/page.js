@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { formatMoney, formatDate, FUND_LABELS } from "@/lib/format";
+import { formatMoney, formatDate, formatMethod, FUND_LABELS } from "@/lib/format";
 
 export default async function HistoryPage({ searchParams }) {
   const { gave } = await searchParams;
@@ -18,7 +18,7 @@ export default async function HistoryPage({ searchParams }) {
   // Just this person's gifts, newest first.
   const { data: donations, error } = await supabase
     .from("donations")
-    .select("id, amount, fund, given_on, receipt_number")
+    .select("id, amount, fund, given_on, method, check_number, receipt_number")
     .eq("user_id", user.id)
     .order("given_on", { ascending: false })
     .order("created_at", { ascending: false });
@@ -78,6 +78,7 @@ export default async function HistoryPage({ searchParams }) {
               <tr>
                 <th>Date</th>
                 <th>Fund</th>
+                <th>Method</th>
                 <th className="num">Amount</th>
                 <th>Receipt</th>
               </tr>
@@ -90,6 +91,9 @@ export default async function HistoryPage({ searchParams }) {
                     <span className={`fund-tag fund-${d.fund}`}>
                       {FUND_LABELS[d.fund]}
                     </span>
+                  </td>
+                  <td className="cell-method">
+                    {formatMethod(d.method, d.check_number)}
                   </td>
                   <td className="num cell-amount">{formatMoney(d.amount)}</td>
                   <td className="cell-receipt">
