@@ -314,6 +314,7 @@ a {
 
 .form input {
   font: inherit;
+  font-weight: 400;
   padding: 0.75rem 0.9rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -1146,6 +1147,126 @@ a {
 }
 
 /* ============================================================
+   Bill payments: Pay a bill page and dashboard sections
+   ============================================================ */
+.pay-card {
+  max-width: 560px;
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 0.95rem;
+  margin-bottom: var(--space-md);
+}
+
+.form select {
+  font: inherit;
+  font-weight: 400;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--text);
+}
+
+.form select:focus {
+  outline: 2px solid var(--gold);
+  border-color: var(--gold);
+}
+
+.money-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  padding-left: 0.9rem;
+}
+
+.money-input:focus-within {
+  outline: 2px solid var(--gold);
+  border-color: var(--gold);
+}
+
+.form .money-input input {
+  border: none;
+  outline: none;
+  flex: 1;
+  min-width: 0;
+  padding-left: 0.4rem;
+}
+
+.optional {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.pay-card .give-submit {
+  margin-top: var(--space-xs);
+}
+
+.pay-card .demo-note {
+  margin-top: 0;
+}
+
+.notice {
+  background: var(--green-soft);
+  color: var(--green-dark);
+  border: 1px solid #cfe6d8;
+  border-left: 4px solid var(--green);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  margin-bottom: var(--space-lg);
+  font-weight: 600;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.section-header .section-heading {
+  margin-bottom: 0;
+}
+
+.section-header-spaced {
+  margin-top: var(--space-xl);
+}
+
+.fund-balances {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.fund-total-value.is-negative {
+  color: var(--red);
+}
+
+.payee-name {
+  display: block;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.payment-note {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
+  white-space: normal;
+}
+
+.cell-recorder,
+.cell-category {
+  color: var(--muted);
+}
+
+.empty-note {
+  color: var(--muted);
+}
+
+/* ============================================================
    Tablets and phones
    ============================================================ */
 @media (max-width: 760px) {
@@ -1270,6 +1391,30 @@ a {
     grid-template-areas:
       "fund amount"
       "date receipt";
+  }
+
+  /* Payments: payee and amount, then date and fund, then category and recorder. */
+  .table-stack-payments tr {
+    grid-template-areas:
+      "payee amount"
+      "date fund"
+      "category recorder";
+  }
+
+  .table-stack .cell-payee {
+    grid-area: payee;
+    min-width: 0;
+  }
+
+  .table-stack .cell-category {
+    grid-area: category;
+    font-size: 0.85rem;
+  }
+
+  .table-stack .cell-recorder {
+    grid-area: recorder;
+    font-size: 0.85rem;
+    text-align: right;
   }
 
   .table-stack tr:last-child {

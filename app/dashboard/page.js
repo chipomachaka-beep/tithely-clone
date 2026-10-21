@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { formatMoney, formatDate, FUND_LABELS } from "@/lib/format";
+import {
+  formatMoney,
+  formatDate,
+  FUND_LABELS,
+  CATEGORY_LABELS,
+} from "@/lib/format";
 import { sendReceipt } from "./actions";
 
 export default async function DashboardPage({ searchParams }) {
-  const { error: receiptError } = await searchParams;
+  const { error: receiptError, paid } = await searchParams;
   const supabase = await createClient();
 
   // Only treasurers may see this page. Everyone else goes to their own history.
@@ -39,6 +44,17 @@ export default async function DashboardPage({ searchParams }) {
     return <p className="error">Could not load donations: {error.message}</p>;
   }
 
+  // Every bill paid out of church funds, newest first, with who recorded it.
+  const { data: payments, error: paymentsError } = await supabase
+    .from("payments")
+    .select("id, paid_on, payee, category, amount, fund, note, profiles(full_name)")
+    .order("paid_on", { ascending: false })
+    .order("created_at", { ascending: false });
+
+  if (paymentsError) {
+    return <p className="error">Could not load payments: {paymentsError.message}</p>;
+  }
+
   // Add up the totals for each fund, overall, and for this month.
   // Gift dates look like "2026-10-05", so this month's dates start with "2026-10".
   const thisMonth = new Date().toISOString().slice(0, 7);
@@ -57,6 +73,12 @@ export default async function DashboardPage({ searchParams }) {
     }
   }
   const grandTotal = fundTotals.tithe + fundTotals.offering + fundTotals.building;
+
+  // Balance for each fund: money given minus money paid out.
+  const paidOut = { tithe: 0, offering: 0, building: 0 };
+  for (const p of payments) {
+    paidOut[p.fund] += Number(p.amount);
+  }
 
   // A giver is anyone with at least one gift; count each person once.
   const giverCount = new Set(donations.map((d) => d.user_id)).size;
@@ -89,6 +111,38 @@ export default async function DashboardPage({ searchParams }) {
             {giverCount === 1 ? "person has" : "people have"} given
           </span>
         </div>
+      </div>
+
+      {paid && (
+        <p className="notice" role="status">
+          Payment recorded. Demo only: no money was sent.
+        </p>
+      )}
+
+      <div className="section-header">
+        <h2 className="section-heading">Fund Balances</h2>
+        <Link href="/pay" className="button button-gold button-small">
+          Pay a bill
+        </Link>
+      </div>
+      <div className="fund-totals fund-balances">
+        {Object.keys(FUND_LABELS).map((fund) => {
+          const balance = fundTotals[fund] - paidOut[fund];
+          return (
+            <div key={fund} className={`fund-total fund-total-${fund}`}>
+              <span className="stat-label">{FUND_LABELS[fund]}</span>
+              <span
+                className={`fund-total-value${balance < 0 ? " is-negative" : ""}`}
+              >
+                {formatMoney(balance)}
+              </span>
+              <span className="stat-detail">
+                {formatMoney(fundTotals[fund])} given −{" "}
+                {formatMoney(paidOut[fund])} paid
+              </span>
+            </div>
+          );
+        })}
       </div>
 
       <h2 className="section-heading">Totals by Fund</h2>
@@ -157,6 +211,50 @@ export default async function DashboardPage({ searchParams }) {
                       </form>
                     )}
                   </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div className="section-header section-header-spaced">
+        <h2 className="section-heading">Payments Out</h2>
+        <Link href="/pay" className="button button-small">
+          Pay a bill
+        </Link>
+      </div>
+      {payments.length === 0 ? (
+        <p className="empty-note">No payments recorded yet.</p>
+      ) : (
+        <div className="table-wrap">
+          <table className="table table-stack table-stack-payments">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Payee</th>
+                <th>Category</th>
+                <th>From fund</th>
+                <th className="num">Amount</th>
+                <th>Recorded by</th>
+              </tr>
+            </thead>
+            <tbody>
+              {payments.map((p) => (
+                <tr key={p.id}>
+                  <td className="cell-date">{formatDate(p.paid_on)}</td>
+                  <td className="cell-payee">
+                    <span className="payee-name">{p.payee}</span>
+                    {p.note && <span className="payment-note">{p.note}</span>}
+                  </td>
+                  <td className="cell-category">{CATEGORY_LABELS[p.category]}</td>
+                  <td className="cell-fund">
+                    <span className={`fund-tag fund-${p.fund}`}>
+                      {FUND_LABELS[p.fund]}
+                    </span>
+                  </td>
+                  <td className="num cell-amount">−{formatMoney(p.amount)}</td>
+                  <td className="cell-recorder">{p.profiles?.full_name}</td>
                 </tr>
               ))}
             </tbody>
