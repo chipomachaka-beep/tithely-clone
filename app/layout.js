@@ -31,6 +31,7 @@ export default function RootLayout({ children }) {
               </address>
             </div>
             <nav className="footer-links" aria-label="Footer">
+              <Link href="/churches">Find your church</Link>
               <Link href="/give">Give</Link>
               <Link href="/history">My Giving</Link>
             </nav>

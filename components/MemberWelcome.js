@@ -38,6 +38,9 @@ export default async function MemberWelcome({ supabase, user }) {
         <p className="welcome-thanks">
           Thank you for supporting the ministry of {CHURCH.name}.
         </p>
+        <p className="welcome-more">
+          You can also <Link href="/church/invitation-hill">give by text or QR code</Link>.
+        </p>
       </section>
 
       <section className="welcome-cards" aria-label="Shortcuts">

@@ -18,6 +18,9 @@ A bootcamp demo that rebuilds the core of Tithely Giving:
   electricity) and sees each fund's balance. Demo only: no money is sent.
 - **Payment methods:** every gift is Online, Cash, or Check (with check number).
   The treasurer records cash and check envelope gifts under a member's name.
+- **Find your church:** search a list of churches; Invitation Hill opens its giving page, with
+  a QR code (`public/qr/`, made once from the page's address), a printable "Scan to give"
+  poster, and a **Text to Give** demo (a pretend phone; no real text messages are sent).
 - **Monthly statements:** gifts are grouped by month. The treasurer sends a member
   their statement for a month; the member views and prints it from My Giving.
 
@@ -52,6 +55,7 @@ Then run these files in **SQL Editor**, in order:
 | `supabase/receipts.sql` | Adds receipt numbers; only the treasurer can issue receipts |
 | `supabase/payments.sql` | Adds bill payments; only the treasurer can see or record them |
 | `supabase/payment-methods.sql` | Adds online / cash / check; only the treasurer can record gifts for others |
+| `supabase/text-to-give.sql` | Adds "text" as a payment method for the Text to Give demo |
 | `supabase/statements.sql` | Monthly statements; only the treasurer can send them |
 | `supabase/edit-history.sql` | Edit or delete payments and envelope gifts, with a reason and a change history |
 

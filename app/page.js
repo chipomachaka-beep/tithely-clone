@@ -94,6 +94,9 @@ export default async function Home() {
             My Giving
           </Link>
         </div>
+        <p className="hero-find">
+          Giving to another church? <Link href="/churches">Find your church</Link>
+        </p>
       </section>
 
       <section className="home-section">

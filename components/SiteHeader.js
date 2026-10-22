@@ -36,6 +36,7 @@ export default async function SiteHeader() {
         <nav className="nav">
           {!user && (
             <>
+              <Link href="/churches">Find your church</Link>
               <Link href="/login">Log in</Link>
               <Link href="/signup" className="button button-accent button-small">
                 Sign up

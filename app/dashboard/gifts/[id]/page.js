@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatMoney, formatMethod, FUND_LABELS } from "@/lib/format";
+import { formatMoney, formatMethod, isEnvelopeGift, FUND_LABELS } from "@/lib/format";
 import { monthName } from "@/lib/months";
 import {
   requireTreasurer,
@@ -48,8 +48,8 @@ export default async function EditGiftPage({ params, searchParams }) {
   // statement hasn't been sent, can be changed. The database enforces this too.
   const lockedReason = gift.receipt_number
     ? `This gift already has a receipt (${gift.receipt_number}), so it can't be edited or deleted.`
-    : gift.method === "online"
-      ? "Online gifts are given by members themselves, so they can't be edited or deleted."
+    : !isEnvelopeGift(gift.method)
+      ? "Online and text gifts are given by members themselves, so they can't be edited or deleted."
       : statement
         ? `The ${monthName(giftMonth)} statement has already been sent to ${gift.profiles?.full_name}, so this gift can't be edited or deleted. Changing it would make their statement wrong.`
         : null;

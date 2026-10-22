@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatMoney, formatDate, formatMethod, FUND_LABELS } from "@/lib/format";
+import { formatMoney, formatDate, formatMethod, isEnvelopeGift, FUND_LABELS } from "@/lib/format";
 import { requireTreasurer, loadGifts, loadMembers } from "@/lib/treasurer";
 import { groupByMonth, giftCount } from "@/lib/months";
 import MemberFilter from "@/components/MemberFilter";
@@ -181,7 +181,7 @@ export default async function GiftsPage({ searchParams }) {
                       <td className="cell-actions">
                         {/* Only envelope gifts (cash or check) can be edited, and only
                             before a receipt or that month's statement is sent. */}
-                        {d.method !== "online" &&
+                        {isEnvelopeGift(d.method) &&
                         !d.receipt_number &&
                         sent.has(`${d.user_id}|${month.key}`) ? (
                           <Link
@@ -191,7 +191,7 @@ export default async function GiftsPage({ searchParams }) {
                           >
                             Locked
                           </Link>
-                        ) : d.method !== "online" && !d.receipt_number ? (
+                        ) : isEnvelopeGift(d.method) && !d.receipt_number ? (
                           <Link
                             href={`/dashboard/gifts/${d.id}`}
                             className="edit-link"
@@ -200,7 +200,7 @@ export default async function GiftsPage({ searchParams }) {
                             Edit
                           </Link>
                         ) : (
-                          <span className="no-actions" title={d.receipt_number ? "Has a receipt" : "Online gift"}>
+                          <span className="no-actions" title={d.receipt_number ? "Has a receipt" : "Given by the member (online or text)"}>
                             —
                           </span>
                         )}
