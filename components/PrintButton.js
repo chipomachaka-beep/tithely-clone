@@ -4,7 +4,7 @@
 // or choose "Save as PDF".
 export default function PrintButton() {
   return (
-    <button type="button" className="button button-gold" onClick={() => window.print()}>
+    <button type="button" className="button button-accent" onClick={() => window.print()}>
       Print or save as PDF
     </button>
   );

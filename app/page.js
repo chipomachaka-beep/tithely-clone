@@ -2,7 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import MemberWelcome from "@/components/MemberWelcome";
 
-// Simple line icons drawn with SVG. They use the text color (set to gold in CSS).
+// Simple line icons drawn with SVG. They use the text color (set to light green in CSS).
 function HeartIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -87,7 +87,7 @@ export default async function Home() {
           and offerings.
         </p>
         <div className="hero-actions">
-          <Link href="/give" className="button button-gold button-large">
+          <Link href="/give" className="button button-accent button-large">
             Give now
           </Link>
           <Link href="/history" className="button button-large">

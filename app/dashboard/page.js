@@ -121,7 +121,7 @@ export default async function OverviewPage() {
       </div>
 
       <div className="quick-actions">
-        <Link href="/dashboard/record-gift" className="button button-gold">
+        <Link href="/dashboard/record-gift" className="button button-accent">
           Record Gift
         </Link>
         <Link href="/dashboard/pay-bills" className="button">

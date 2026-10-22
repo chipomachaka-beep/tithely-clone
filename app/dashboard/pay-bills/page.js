@@ -119,7 +119,7 @@ export default async function PayBillsPage({ searchParams }) {
             />
           </label>
 
-          <button type="submit" className="button button-gold give-submit">
+          <button type="submit" className="button button-accent give-submit">
             Record payment
           </button>
           <p className="demo-note">Demo only: no money is sent.</p>

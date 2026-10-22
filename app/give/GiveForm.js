@@ -116,7 +116,7 @@ export default function GiveForm() {
 
         <button
           type="submit"
-          className="button button-gold give-submit"
+          className="button button-accent give-submit"
           disabled={!amountIsValid || isSaving}
         >
           {isSaving

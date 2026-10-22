@@ -6,10 +6,11 @@
 // Hovering a point or bar shows its exact amount; "Show the numbers" lists them all.
 import { formatMoney } from "@/lib/format";
 
+// Green is the main series and navy the second. Both stand out on white
+// (green 5.2:1, navy 14:1), and the second series is also dashed or set apart
+// by position, so color isn't the only way to tell them apart.
+const GREEN = "#2f7a52";
 const NAVY = "#1b2a4a";
-// A deeper gold than the brand gold, so thin lines still stand out on white
-// (3.6:1 contrast; the brand gold is only 2.4:1).
-const GOLD = "#a8812f";
 const GRID = "#e6e8ee";
 const INK = "#5f6b7a";
 
@@ -73,8 +74,8 @@ function LineChart({ months, width, height }) {
   const yFor = (v) => pad.top + (height - pad.top - pad.bottom) * (1 - v / scale.max);
 
   const series = [
-    { key: "tithe", label: "Tithe", color: NAVY, dash: undefined },
-    { key: "offering", label: "Offering", color: GOLD, dash: "6 4" },
+    { key: "tithe", label: "Tithe", color: GREEN, dash: undefined },
+    { key: "offering", label: "Offering", color: NAVY, dash: "6 4" },
   ];
 
   // Labels at the end of each line, nudged apart if they'd overlap.
@@ -167,8 +168,8 @@ function BarChart({ months, width, height }) {
       {months.map((m, i) => {
         const center = xFor(i);
         const bars = [
-          { label: "Money in", value: m.moneyIn, color: NAVY, x: center - barWidth - 1 },
-          { label: "Money out", value: m.moneyOut, color: GOLD, x: center + 1 },
+          { label: "Money in", value: m.moneyIn, color: GREEN, x: center - barWidth - 1 },
+          { label: "Money out", value: m.moneyOut, color: NAVY, x: center + 1 },
         ];
         return bars.map((b) => {
           const h = heightFor(b.value);
@@ -207,8 +208,8 @@ export default function TrendCharts({ months }) {
           <h3>Tithe and Offering by month</h3>
           <Legend
             items={[
-              { label: "Tithe", color: NAVY, shape: "line" },
-              { label: "Offering", color: GOLD, shape: "dashed" },
+              { label: "Tithe", color: GREEN, shape: "line" },
+              { label: "Offering", color: NAVY, shape: "dashed" },
             ]}
           />
         </figcaption>
@@ -225,8 +226,8 @@ export default function TrendCharts({ months }) {
           <h3>Money in vs. money out by month</h3>
           <Legend
             items={[
-              { label: "Money in", color: NAVY, shape: "box" },
-              { label: "Money out", color: GOLD, shape: "box" },
+              { label: "Money in", color: GREEN, shape: "box" },
+              { label: "Money out", color: NAVY, shape: "box" },
             ]}
           />
         </figcaption>

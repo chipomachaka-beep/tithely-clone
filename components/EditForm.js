@@ -48,7 +48,7 @@ export default function EditForm({ saveAction, deleteAction, what, children }) {
       </label>
 
       <div className="edit-buttons">
-        <button type="submit" data-intent="save" className="button button-gold">
+        <button type="submit" data-intent="save" className="button button-accent">
           Save
         </button>
         <button

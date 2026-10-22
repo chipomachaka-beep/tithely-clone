@@ -52,7 +52,7 @@ export default async function GiftsPage({ searchParams }) {
             Every gift to the church, by month. Send receipts and monthly statements from here.
           </p>
         </div>
-        <Link href="/dashboard/record-gift" className="button button-gold">
+        <Link href="/dashboard/record-gift" className="button button-accent">
           Record Gift
         </Link>
       </div>

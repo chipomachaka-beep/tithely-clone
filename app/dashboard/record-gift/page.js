@@ -83,7 +83,7 @@ export default async function RecordGiftPage({ searchParams }) {
             <input name="given_on" type="date" required defaultValue={today} max={today} />
           </label>
 
-          <button type="submit" className="button button-gold give-submit">
+          <button type="submit" className="button button-accent give-submit">
             Record gift
           </button>
           <p className="demo-note">Demo only: no money is processed.</p>

@@ -59,6 +59,9 @@ files replace security rules from earlier ones.
 
 Helpers, only if needed:
 
+- `supabase/reset-demo-data.sql`: resets to clean demo data (four members with six gifts each,
+  two bill payments, no statements or history); creates Grace's and Daniel's logins
+
 - `supabase/reset-test-passwords.sql`: sets the test accounts' passwords to `test123456`
 - `supabase/remove-duplicate-donations.sql`: removes sample gifts added twice
 - `supabase/cleanup-test-data.sql`: removes the exact test rows created while testing

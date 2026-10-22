@@ -37,7 +37,7 @@ export default async function SiteHeader() {
           {!user && (
             <>
               <Link href="/login">Log in</Link>
-              <Link href="/signup" className="button button-gold button-small">
+              <Link href="/signup" className="button button-accent button-small">
                 Sign up
               </Link>
             </>
@@ -47,7 +47,7 @@ export default async function SiteHeader() {
             <>
               <Link href="/">Home</Link>
               <Link href="/history">My Giving</Link>
-              <Link href="/give" className="button button-green button-small">
+              <Link href="/give" className="button button-accent button-small">
                 Give
               </Link>
               <span className="nav-name">{profile?.full_name}</span>
@@ -62,7 +62,7 @@ export default async function SiteHeader() {
           {isTreasurer && (
             <>
               <UserMenu name={profile.full_name} logoutAction={logout} />
-              <Link href="/give" className="button button-gold button-small">
+              <Link href="/give" className="button button-accent button-small">
                 Give
               </Link>
             </>

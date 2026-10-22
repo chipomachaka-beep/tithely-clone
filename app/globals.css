@@ -5,9 +5,16 @@
 :root {
   --navy: #1b2a4a;
   --navy-light: #2c4170;
-  --gold: #c9a45c;
-  --gold-dark: #b8934b;
-  --gold-soft: #f6efe0;
+  /* Main color: a calm green. White text on it is 5.2:1. */
+  --accent: #2f7a52;
+  --accent-dark: #24593f;
+  --accent-soft: #e9f3ee;
+  /* The same green, lightened for use on the navy header and footer (8:1). */
+  --accent-light: #8fd3ad;
+  /* A soft warm neutral, used sparingly: Building Fund, previews, reasons. */
+  --sand: #b08a45;
+  --sand-dark: #6b5420;
+  --sand-soft: #f6efe0;
   --green: #2f7a52;
   --green-dark: #24593f;
   --green-soft: #e9f3ee;
@@ -101,7 +108,7 @@ a {
    ============================================================ */
 .site-header {
   background: var(--navy);
-  border-bottom: 4px solid var(--gold);
+  border-bottom: 4px solid var(--accent-light);
   padding: var(--space-md) var(--space-lg);
   display: flex;
   align-items: center;
@@ -119,7 +126,7 @@ a {
 }
 
 .brand-mark {
-  color: var(--gold);
+  color: var(--accent-light);
   margin-right: 0.3rem;
 }
 
@@ -140,22 +147,17 @@ a {
 
 .nav a:hover,
 .nav-button:hover {
-  color: var(--gold);
+  color: var(--accent-light);
 }
 
-.nav .button-gold,
-.nav .button-gold:hover {
-  color: var(--navy);
-}
-
-.nav .button-green,
-.nav .button-green:hover {
+.nav .button-accent,
+.nav .button-accent:hover {
   color: var(--white);
 }
 
 /* On the navy header, a light green edge keeps the button's outline clear. */
-.nav .button-green {
-  box-shadow: 0 0 0 1px #8fd3ad;
+.nav .button-accent {
+  box-shadow: 0 0 0 1px var(--accent-light);
 }
 
 /* Log out: soft red outline. The light red text is about 8:1 against the navy. */
@@ -182,7 +184,7 @@ a {
 }
 
 .nav-name {
-  color: var(--gold);
+  color: var(--accent-light);
   font-size: 0.95rem;
 }
 
@@ -198,7 +200,7 @@ a {
    ============================================================ */
 .site-footer {
   background: var(--navy);
-  border-top: 4px solid var(--gold);
+  border-top: 4px solid var(--accent-light);
   color: #c9d2e3;
   padding: var(--space-xl) var(--space-lg) var(--space-lg);
 }
@@ -239,7 +241,7 @@ a {
 }
 
 .footer-links a:hover {
-  color: var(--gold);
+  color: var(--accent-light);
 }
 
 .footer-note {
@@ -275,29 +277,19 @@ a {
   box-shadow: var(--shadow-sm);
 }
 
-.button-gold {
-  background: var(--gold);
-  color: var(--navy);
+.button-accent {
+  background: var(--accent);
+  color: var(--white);
 }
 
-.button-gold:hover {
-  background: var(--gold-dark);
+.button-accent:hover {
+  background: var(--accent-dark);
 }
 
 .button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
-}
-
-/* Members' Give button. White on this green is about 5.4:1 contrast. */
-.button-green {
-  background: var(--green);
-  color: var(--white);
-}
-
-.button-green:hover {
-  background: var(--green-dark);
 }
 
 .button-small {
@@ -365,8 +357,8 @@ a {
 }
 
 .form input:focus {
-  outline: 2px solid var(--gold);
-  border-color: var(--gold);
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
 }
 
 .form .button {
@@ -384,8 +376,8 @@ a {
 .stat-card {
   display: inline-flex;
   flex-direction: column;
-  background: var(--gold-soft);
-  border-left: 4px solid var(--gold);
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
   padding: var(--space-md) var(--space-lg);
   margin-bottom: var(--space-sm);
 }
@@ -426,7 +418,7 @@ a {
 .stat-card-total {
   background: var(--navy);
   border-color: var(--navy);
-  border-left-color: var(--gold);
+  border-left-color: var(--accent-light);
 }
 
 .stat-card-total .stat-label,
@@ -459,11 +451,11 @@ a {
 }
 
 .fund-total-offering {
-  border-left-color: var(--gold);
+  border-left-color: var(--accent);
 }
 
 .fund-total-building {
-  border-left-color: var(--green);
+  border-left-color: var(--sand);
 }
 
 .fund-total-value {
@@ -495,7 +487,7 @@ a {
 }
 
 .table th {
-  background: var(--gold-soft);
+  background: var(--accent-soft);
   color: var(--navy);
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -503,7 +495,7 @@ a {
 }
 
 .table tbody tr:hover {
-  background: #fcfbf7;
+  background: #f5faf7;
 }
 
 .table tr:last-child td {
@@ -530,13 +522,13 @@ a {
 }
 
 .fund-offering {
-  background: var(--gold-soft);
-  color: #7a5c1e;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
 }
 
 .fund-building {
-  background: var(--green-soft);
-  color: var(--green-dark);
+  background: var(--sand-soft);
+  color: var(--sand-dark);
 }
 
 /* ============================================================
@@ -562,7 +554,7 @@ a {
 .hero-verse cite {
   display: block;
   font-size: 0.9rem;
-  color: var(--gold-dark);
+  color: var(--accent-dark);
   font-weight: 600;
   margin-top: 0.3rem;
 }
@@ -593,7 +585,7 @@ a {
 }
 
 .fund-card {
-  border-top: 4px solid var(--gold);
+  border-top: 4px solid var(--accent);
   padding: var(--space-lg);
   text-align: center;
 }
@@ -617,7 +609,7 @@ a {
   height: 56px;
   border-radius: 50%;
   background: var(--navy);
-  color: var(--gold);
+  color: var(--accent-light);
 }
 
 .fund-card-icon svg {
@@ -635,7 +627,7 @@ a {
 }
 
 .step {
-  background: var(--gold-soft);
+  background: var(--accent-soft);
   border-radius: var(--radius);
   padding: var(--space-lg);
   text-align: center;
@@ -648,7 +640,7 @@ a {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--gold);
+  background: var(--accent);
   color: var(--navy);
   font-family: var(--font-heading), Georgia, serif;
   font-size: 1.3rem;
@@ -721,18 +713,18 @@ a {
 
 .amount-button:hover,
 .fund-button:hover {
-  border-color: var(--gold);
+  border-color: var(--accent);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
 .amount-button[aria-pressed="true"],
 .fund-button[aria-pressed="true"] {
-  background: var(--navy);
-  border-color: var(--gold);
+  background: var(--accent);
+  border-color: var(--accent-dark);
   color: var(--white);
   box-shadow:
-    0 0 0 2px var(--gold),
+    0 0 0 2px var(--accent-soft),
     var(--shadow-md);
 }
 
@@ -755,7 +747,7 @@ a {
 }
 
 .custom-amount-field:focus-within {
-  border-color: var(--gold);
+  border-color: var(--accent);
 }
 
 .dollar-sign {
@@ -802,7 +794,7 @@ a {
 .give-summary {
   position: sticky;
   top: var(--space-lg);
-  border-top: 4px solid var(--gold);
+  border-top: 4px solid var(--accent);
   padding: var(--space-lg);
   box-shadow: var(--shadow-md);
 }
@@ -937,7 +929,7 @@ a {
 }
 
 .bar-row:hover {
-  background: var(--gold-soft);
+  background: var(--accent-soft);
 }
 
 .bar-label {
@@ -947,15 +939,15 @@ a {
 
 .bar-track {
   height: 22px;
-  background: var(--gold-soft);
-  border-left: 2px solid var(--gold);
+  background: var(--accent-soft);
+  border-left: 2px solid var(--accent);
 }
 
 /* Square at the baseline, rounded at the end the value grows toward. */
 .bar-fill {
   display: block;
   height: 100%;
-  background: var(--navy);
+  background: var(--accent);
   border-radius: 0 4px 4px 0;
 }
 
@@ -1028,11 +1020,11 @@ a {
 .receipt-header {
   text-align: center;
   padding-bottom: var(--space-lg);
-  border-bottom: 2px solid var(--gold);
+  border-bottom: 2px solid var(--accent);
 }
 
 .receipt-cross {
-  color: var(--gold-dark);
+  color: var(--accent-dark);
   font-size: 1.6rem;
   line-height: 1;
 }
@@ -1134,7 +1126,7 @@ a {
   font-size: 1.25rem;
   color: var(--navy-light);
   padding-top: var(--space-lg);
-  border-top: 2px solid var(--gold);
+  border-top: 2px solid var(--accent);
 }
 
 .receipt-note {
@@ -1238,8 +1230,8 @@ a {
 }
 
 .form select:focus {
-  outline: 2px solid var(--gold);
-  border-color: var(--gold);
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
 }
 
 .money-input {
@@ -1252,8 +1244,8 @@ a {
 }
 
 .money-input:focus-within {
-  outline: 2px solid var(--gold);
-  border-color: var(--gold);
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
 }
 
 .form .money-input input {
@@ -1379,17 +1371,17 @@ a {
 }
 
 .segmented-option:hover span {
-  border-color: var(--gold);
+  border-color: var(--accent);
 }
 
 .segmented-option input:checked + span {
-  background: var(--navy);
-  border-color: var(--gold);
+  background: var(--accent);
+  border-color: var(--accent-dark);
   color: var(--white);
 }
 
 .segmented-option input:focus-visible + span {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -1428,12 +1420,12 @@ a {
 
 .treasurer-tab:hover {
   color: var(--navy);
-  border-bottom-color: var(--gold-soft);
+  border-bottom-color: var(--accent-soft);
 }
 
 .treasurer-tab[aria-current="page"] {
   color: var(--navy);
-  border-bottom-color: var(--gold);
+  border-bottom-color: var(--accent);
 }
 
 .user-menu {
@@ -1443,7 +1435,7 @@ a {
 .user-menu summary {
   list-style: none;
   cursor: pointer;
-  color: var(--gold);
+  color: var(--accent-light);
   font-size: 0.95rem;
   font-weight: 500;
   display: flex;
@@ -1499,7 +1491,7 @@ a {
 
 .user-menu-list a:hover,
 .user-menu-list button:hover {
-  background: var(--gold-soft);
+  background: var(--accent-soft);
 }
 
 /* Title on the left, main button on the right */
@@ -1532,7 +1524,7 @@ a {
 
 .in-out-table tfoot th,
 .in-out-table tfoot td {
-  background: var(--gold-soft);
+  background: var(--accent-soft);
   color: var(--navy);
   font-weight: 700;
   font-size: 1rem;
@@ -1546,8 +1538,8 @@ a {
    ============================================================ */
 .welcome-hero {
   text-align: center;
-  background: linear-gradient(180deg, var(--gold-soft) 0%, #fbf7ee 100%);
-  border: 1px solid #efe3c8;
+  background: linear-gradient(180deg, var(--accent-soft) 0%, #f5faf7 100%);
+  border: 1px solid #cfe6d8;
   border-radius: var(--radius);
   padding: var(--space-xl) var(--space-lg);
   margin-bottom: var(--space-xl);
@@ -1579,7 +1571,7 @@ a {
   gap: 0.2rem;
   background: var(--white);
   border: 1px solid var(--border);
-  border-top: 4px solid var(--gold);
+  border-top: 4px solid var(--accent);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   padding: var(--space-lg);
@@ -1607,7 +1599,7 @@ a {
   height: 48px;
   border-radius: 50%;
   background: var(--navy);
-  color: var(--gold);
+  color: var(--accent-light);
   margin-bottom: var(--space-xs);
 }
 
@@ -1724,7 +1716,7 @@ a {
   gap: var(--space-xs) var(--space-md);
   background: var(--white);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--gold);
+  border-left: 4px solid var(--accent);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   padding: var(--space-sm) var(--space-md);
@@ -1739,7 +1731,7 @@ a {
   content: "▸";
   display: inline-block;
   width: 1.1rem;
-  color: var(--gold-dark);
+  color: var(--accent-dark);
   transition: transform 0.15s ease;
 }
 
@@ -1758,7 +1750,7 @@ a {
 }
 
 .month-summary:hover {
-  border-color: var(--gold);
+  border-color: var(--accent);
 }
 
 .month-group[open] > .month-summary {
@@ -1800,7 +1792,7 @@ a {
 /* Treasurer: one row per member who gave that month */
 .statement-list {
   list-style: none;
-  background: var(--gold-soft);
+  background: var(--accent-soft);
   border: 1px solid var(--border);
   border-top: none;
 }
@@ -1812,7 +1804,7 @@ a {
   flex-wrap: wrap;
   gap: var(--space-xs) var(--space-md);
   padding: 0.6rem var(--space-md);
-  border-bottom: 1px solid #eadfc6;
+  border-bottom: 1px solid #cfe6d8;
 }
 
 .statement-row:last-child {
@@ -1857,8 +1849,8 @@ a {
 }
 
 .member-filter select:focus {
-  outline: 2px solid var(--gold);
-  border-color: var(--gold);
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
 }
 
 /* Statement page: the list of gifts in the month */
@@ -1899,10 +1891,10 @@ a {
 }
 
 .notice-preview {
-  background: var(--gold-soft);
-  color: #7a5c1e;
+  background: var(--sand-soft);
+  color: var(--sand-dark);
   border-color: #eadfc6;
-  border-left-color: var(--gold);
+  border-left-color: var(--sand);
 }
 
 /* Gift and payment lists keep their columns a little tighter so Edit fits. */
@@ -2098,7 +2090,7 @@ a {
   flex-wrap: wrap;
 }
 
-.edit-buttons .button-gold {
+.edit-buttons .button-accent {
   flex: 1;
 }
 
@@ -2157,7 +2149,7 @@ a {
 .change-reason {
   font-size: 0.9rem;
   color: var(--text);
-  background: var(--gold-soft);
+  background: var(--sand-soft);
   border-radius: 6px;
   padding: 0.3rem 0.6rem;
   display: inline-block;
@@ -2165,7 +2157,7 @@ a {
 
 .change-reason span {
   font-weight: 700;
-  color: #7a5c1e;
+  color: var(--sand-dark);
 }
 
 .recent-months {
@@ -2213,7 +2205,7 @@ a {
 
 .chart-point:hover rect[fill="transparent"],
 .chart-point:hover circle[fill="transparent"] {
-  fill: rgba(201, 164, 92, 0.12);
+  fill: rgba(47, 122, 82, 0.1);
 }
 
 .chart-narrow {
@@ -2323,7 +2315,7 @@ a {
     gap: var(--space-md);
   }
 
-  /* Keep the gold Give / Sign up button at the right end of the row. */
+  /* Keep the green Give / Sign up button at the right end of the row. */
   .nav > :last-child {
     margin-left: auto;
   }
