@@ -5,6 +5,7 @@ A bootcamp demo that rebuilds the core of Tithely Giving:
 - **Give a donation:** pick an amount and a fund (Tithe, Offering, or Building Fund).
 - **See my giving history:** each member sees only their own gifts and total.
 - **Treasurer pages** (tabs under the header, treasurer only):
+  - **Member dropdown** on Overview, Gifts, and Reports: "All members", or one person's totals, charts, and gifts.
   - **Overview:** each fund's balance (given minus paid out), and this month's money in and out.
   - **Gifts:** every gift, with a Send receipt button.
   - **Record Gift:** enter cash and check gifts from the offering envelope.

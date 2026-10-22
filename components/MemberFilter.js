@@ -1,15 +1,17 @@
 "use client";
 
-// "Member" dropdown on the Gifts page. Choosing a name shows only that
-// person's gifts; "All members" shows everyone's.
-import { useRouter } from "next/navigation";
+// "Member" dropdown on the treasurer's Overview, Gifts, and Reports pages.
+// Choosing a name shows only that person's numbers; "All members" shows
+// everyone's. The choice is kept in the address, like /dashboard/reports?member=...
+import { usePathname, useRouter } from "next/navigation";
 
 export default function MemberFilter({ members, selected }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   function showMember(event) {
     const id = event.target.value;
-    router.push(id ? `/dashboard/gifts?member=${id}` : "/dashboard/gifts");
+    router.push(id ? `${pathname}?member=${id}` : pathname);
   }
 
   return (

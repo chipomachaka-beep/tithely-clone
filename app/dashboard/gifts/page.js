@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { formatMoney, formatDate, formatMethod, FUND_LABELS } from "@/lib/format";
-import { requireTreasurer, loadGifts } from "@/lib/treasurer";
+import { requireTreasurer, loadGifts, loadMembers } from "@/lib/treasurer";
 import { groupByMonth, giftCount } from "@/lib/months";
-import MemberFilter from "./MemberFilter";
+import MemberFilter from "@/components/MemberFilter";
 import { sendReceipt, sendStatement } from "./actions";
 
 export const metadata = {
@@ -13,9 +13,9 @@ export default async function GiftsPage({ searchParams }) {
   const { error, recorded, edited, deleted, statement, member } = await searchParams;
   const { supabase } = await requireTreasurer();
 
-  const [allGifts, { data: members }, { data: statements }] = await Promise.all([
+  const [allGifts, members, { data: statements }] = await Promise.all([
     loadGifts(supabase),
-    supabase.from("profiles").select("id, full_name").eq("role", "member").order("full_name"),
+    loadMembers(supabase),
     supabase.from("statements").select("user_id, month"),
   ]);
 
@@ -57,7 +57,7 @@ export default async function GiftsPage({ searchParams }) {
         </Link>
       </div>
 
-      <MemberFilter members={members ?? []} selected={member} />
+      <MemberFilter members={members} selected={member} />
 
       {recorded && (
         <p className="notice" role="status">

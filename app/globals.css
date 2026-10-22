@@ -1274,6 +1274,7 @@ a {
 
 .section-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: var(--space-sm);
@@ -2161,6 +2162,10 @@ a {
 }
 
 .recent-months {
+  margin-bottom: var(--space-xl);
+}
+
+.recent-gifts {
   margin-bottom: var(--space-xl);
 }
 

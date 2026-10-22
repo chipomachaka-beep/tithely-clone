@@ -1,6 +1,6 @@
 // Two month-by-month charts for Reports, drawn with plain SVG:
 //   1. a line chart of Tithe and Offering
-//   2. a bar chart of money in vs. money out
+//   2. a bar chart of money in vs. money out (or, for one member, their gifts)
 // Each chart is drawn twice, a wide version and a narrow one, and CSS shows the
 // one that fits the screen, so the labels stay readable on phones.
 // Hovering a point or bar shows its exact amount; "Show the numbers" lists them all.
@@ -146,13 +146,14 @@ function barPath(x, y, w, h) {
   return `M${x},${y + h} V${y + r} Q${x},${y} ${x + r},${y} H${x + w - r} Q${x + w},${y} ${x + w},${y + r} V${y + h} Z`;
 }
 
-function BarChart({ months, width, height }) {
+// `series` is a list of { key, label, color }: money in and out, or just gifts.
+function BarChart({ months, series, width, height }) {
   const pad = { top: 16, right: 16, bottom: 34, left: 52 };
   const plotWidth = width - pad.left - pad.right;
   const plotHeight = height - pad.top - pad.bottom;
-  const scale = niceScale(Math.max(...months.map((m) => Math.max(m.moneyIn, m.moneyOut))));
+  const scale = niceScale(Math.max(...months.flatMap((m) => series.map((s) => m[s.key]))));
   const groupWidth = plotWidth / months.length;
-  const barWidth = Math.min(30, groupWidth * 0.32);
+  const barWidth = Math.min(series.length === 1 ? 40 : 30, groupWidth * (series.length === 1 ? 0.5 : 0.32));
   const xFor = (i) => pad.left + groupWidth * (i + 0.5);
   const heightFor = (v) => (plotHeight * v) / scale.max;
   const baseline = pad.top + plotHeight;
@@ -161,16 +162,20 @@ function BarChart({ months, width, height }) {
     <svg
       viewBox={`0 0 ${width} ${height}`}
       role="img"
-      aria-label="Bar chart of money in and money out by month"
+      aria-label={`Bar chart of ${series.map((s) => s.label.toLowerCase()).join(" and ")} by month`}
       className="chart-svg"
     >
       <Frame width={width} height={height} pad={pad} scale={scale} months={months} xFor={xFor} />
       {months.map((m, i) => {
         const center = xFor(i);
-        const bars = [
-          { label: "Money in", value: m.moneyIn, color: GREEN, x: center - barWidth - 1 },
-          { label: "Money out", value: m.moneyOut, color: NAVY, x: center + 1 },
-        ];
+        // Bars sit side by side with a 2px gap, centered on the month label.
+        const start = center - (series.length * barWidth + (series.length - 1) * 2) / 2;
+        const bars = series.map((s, n) => ({
+          label: s.label,
+          value: m[s.key],
+          color: s.color,
+          x: start + n * (barWidth + 2),
+        }));
         return bars.map((b) => {
           const h = heightFor(b.value);
           return (
@@ -200,7 +205,15 @@ function Legend({ items }) {
   );
 }
 
-export default function TrendCharts({ months }) {
+// `memberName` is set when one member is chosen: their gifts only, no money out.
+export default function TrendCharts({ months, memberName = null }) {
+  const barSeries = memberName
+    ? [{ key: "moneyIn", label: "Gifts", color: GREEN }]
+    : [
+        { key: "moneyIn", label: "Money in", color: GREEN },
+        { key: "moneyOut", label: "Money out", color: NAVY },
+      ];
+
   return (
     <div className="trend-charts">
       <figure className="chart-card">
@@ -223,19 +236,14 @@ export default function TrendCharts({ months }) {
 
       <figure className="chart-card">
         <figcaption>
-          <h3>Money in vs. money out by month</h3>
-          <Legend
-            items={[
-              { label: "Money in", color: GREEN, shape: "box" },
-              { label: "Money out", color: NAVY, shape: "box" },
-            ]}
-          />
+          <h3>{memberName ? `${memberName}'s gifts by month` : "Money in vs. money out by month"}</h3>
+          <Legend items={barSeries.map((s) => ({ label: s.label, color: s.color, shape: "box" }))} />
         </figcaption>
         <div className="chart-wide">
-          <BarChart months={months} width={680} height={260} />
+          <BarChart months={months} series={barSeries} width={680} height={260} />
         </div>
         <div className="chart-narrow">
-          <BarChart months={months} width={340} height={240} />
+          <BarChart months={months} series={barSeries} width={340} height={240} />
         </div>
       </figure>
 
@@ -248,8 +256,8 @@ export default function TrendCharts({ months }) {
                 <th>Month</th>
                 <th className="num">Tithe</th>
                 <th className="num">Offering</th>
-                <th className="num">Money in</th>
-                <th className="num">Money out</th>
+                <th className="num">{memberName ? "All gifts" : "Money in"}</th>
+                {!memberName && <th className="num">Money out</th>}
               </tr>
             </thead>
             <tbody>
@@ -259,7 +267,7 @@ export default function TrendCharts({ months }) {
                   <td className="num">{formatMoney(m.tithe)}</td>
                   <td className="num">{formatMoney(m.offering)}</td>
                   <td className="num">{formatMoney(m.moneyIn)}</td>
-                  <td className="num">{formatMoney(m.moneyOut)}</td>
+                  {!memberName && <td className="num">{formatMoney(m.moneyOut)}</td>}
                 </tr>
               ))}
             </tbody>
