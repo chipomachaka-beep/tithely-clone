@@ -5,8 +5,8 @@ import {
   CATEGORY_LABELS,
 } from "@/lib/format";
 import { requireTreasurer, loadPayments } from "@/lib/treasurer";
-import DeleteButton from "@/components/DeleteButton";
-import { recordPayment, deletePayment } from "./actions";
+import Link from "next/link";
+import { recordPayment } from "./actions";
 
 export const metadata = {
   title: "Pay Bills",
@@ -16,7 +16,7 @@ export const metadata = {
 const COMMON_PAYEES = ["MDU", "City of Dickinson"];
 
 export default async function PayBillsPage({ searchParams }) {
-  const { error, paid, deleted } = await searchParams;
+  const { error, paid, edited, deleted } = await searchParams;
   const { supabase } = await requireTreasurer();
   const payments = await loadPayments(supabase);
 
@@ -30,9 +30,14 @@ export default async function PayBillsPage({ searchParams }) {
           Payment recorded. Demo only: no money was sent.
         </p>
       )}
+      {edited && (
+        <p className="notice" role="status">
+          Payment updated. The change is saved in the Change History.
+        </p>
+      )}
       {deleted && (
         <p className="notice" role="status">
-          Payment deleted.
+          Payment deleted. The change is saved in the Change History.
         </p>
       )}
 
@@ -131,13 +136,10 @@ export default async function PayBillsPage({ searchParams }) {
               <tr>
                 <th>Date</th>
                 <th>Payee</th>
-                <th>Category</th>
                 <th>From fund</th>
                 <th className="num">Amount</th>
                 <th>Recorded by</th>
-                <th>
-                  <span className="visually-hidden">Actions</span>
-                </th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -146,9 +148,11 @@ export default async function PayBillsPage({ searchParams }) {
                   <td className="cell-date">{formatDate(p.paid_on)}</td>
                   <td className="cell-payee">
                     <span className="payee-name">{p.payee}</span>
-                    {p.note && <span className="payment-note">{p.note}</span>}
+                    <span className="payment-note">
+                      {CATEGORY_LABELS[p.category]}
+                      {p.note && ` · ${p.note}`}
+                    </span>
                   </td>
-                  <td className="cell-category">{CATEGORY_LABELS[p.category]}</td>
                   <td className="cell-fund">
                     <span className={`fund-tag fund-${p.fund}`}>
                       {FUND_LABELS[p.fund]}
@@ -157,11 +161,13 @@ export default async function PayBillsPage({ searchParams }) {
                   <td className="num cell-amount">−{formatMoney(p.amount)}</td>
                   <td className="cell-recorder">{p.profiles?.full_name}</td>
                   <td className="cell-actions">
-                    <DeleteButton
-                      action={deletePayment}
-                      id={p.id}
-                      what={`the ${formatMoney(p.amount)} payment to ${p.payee}`}
-                    />
+                    <Link
+                      href={`/dashboard/pay-bills/${p.id}`}
+                      className="edit-link"
+                      aria-label={`Edit the ${formatMoney(p.amount)} payment to ${p.payee}`}
+                    >
+                      Edit
+                    </Link>
                   </td>
                 </tr>
               ))}

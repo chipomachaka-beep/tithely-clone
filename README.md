@@ -9,7 +9,8 @@ A bootcamp demo that rebuilds the core of Tithely Giving:
   - **Gifts:** every gift, with a Send receipt button.
   - **Record Gift:** enter cash and check gifts from the offering envelope.
   - **Pay Bills:** record bills paid from a fund, and see every payment made.
-  - **Reports:** totals by fund (bar chart), by payment method, and money in vs. out.
+  - **Reports:** month-by-month trend charts, totals by fund, by payment method, and money in vs. out.
+  - **Change History:** every edit and delete, with what changed, the reason, who, and when.
 - **Receipts:** the treasurer sends a numbered receipt (IH-2026-0001) for a gift;
   the donor views and prints it from My Giving. No email is sent.
 - **Bill payments:** the treasurer records bills paid from a fund (like MDU for
@@ -50,8 +51,8 @@ Then run these files in **SQL Editor**, in order:
 | `supabase/receipts.sql` | Adds receipt numbers; only the treasurer can issue receipts |
 | `supabase/payments.sql` | Adds bill payments; only the treasurer can see or record them |
 | `supabase/payment-methods.sql` | Adds online / cash / check; only the treasurer can record gifts for others |
-| `supabase/delete-rules.sql` | Treasurer can delete payments, and envelope gifts with no receipt yet |
 | `supabase/statements.sql` | Monthly statements; only the treasurer can send them |
+| `supabase/edit-history.sql` | Edit or delete payments and envelope gifts, with a reason and a change history |
 
 If you re-run an earlier file later, run the files after it again too: some later
 files replace security rules from earlier ones.
@@ -60,6 +61,8 @@ Helpers, only if needed:
 
 - `supabase/reset-test-passwords.sql`: sets the test accounts' passwords to `test123456`
 - `supabase/remove-duplicate-donations.sql`: removes sample gifts added twice
+- `supabase/cleanup-test-data.sql`: removes the exact test rows created while testing
+- `supabase/check-setup.sql`: read-only check that you're in the right project and setup has run
 
 ## Deploy to Vercel
 

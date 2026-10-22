@@ -8,6 +8,7 @@ import {
   sum,
   churchMonth,
 } from "@/lib/treasurer";
+import { shiftMonth, monthlyTotals } from "@/lib/months";
 
 export const metadata = {
   title: "Overview",
@@ -33,6 +34,13 @@ export default async function OverviewPage() {
   const moneyIn = sum(giftsThisMonth);
   const moneyOut = sum(paymentsThisMonth);
   const net = moneyIn - moneyOut;
+
+  // This month and the two before it, newest first, so earlier months show here too.
+  const recent = monthlyTotals(
+    [month.prefix, shiftMonth(month.prefix, -1), shiftMonth(month.prefix, -2)],
+    gifts,
+    payments
+  );
 
   return (
     <section>
@@ -82,6 +90,34 @@ export default async function OverviewPage() {
           <span className="stat-value">{formatMoney(net)}</span>
           <span className="stat-detail">Money in − money out</span>
         </div>
+      </div>
+
+      <h2 className="section-heading">Recent Months</h2>
+      <div className="table-wrap recent-months">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th className="num cell-count">Gifts</th>
+              <th className="num">Money in</th>
+              <th className="num">Money out</th>
+              <th className="num">Net</th>
+            </tr>
+          </thead>
+          <tbody>
+            {recent.map((m) => (
+              <tr key={m.key}>
+                <td>{m.name}</td>
+                <td className="num cell-count">{m.gifts}</td>
+                <td className="num">{formatMoney(m.moneyIn)}</td>
+                <td className="num">−{formatMoney(m.moneyOut)}</td>
+                <td className={`num${m.moneyIn - m.moneyOut < 0 ? " is-negative" : ""}`}>
+                  {formatMoney(m.moneyIn - m.moneyOut)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <div className="quick-actions">

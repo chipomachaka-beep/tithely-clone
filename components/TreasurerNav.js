@@ -11,6 +11,7 @@ const TABS = [
   { href: "/dashboard/record-gift", label: "Record Gift" },
   { href: "/dashboard/pay-bills", label: "Pay Bills" },
   { href: "/dashboard/reports", label: "Reports" },
+  { href: "/dashboard/changes", label: "Change History" },
 ];
 
 export default function TreasurerNav() {
@@ -20,7 +21,10 @@ export default function TreasurerNav() {
     <nav className="treasurer-nav" aria-label="Treasurer">
       <div className="treasurer-nav-inner">
         {TABS.map((tab) => {
-          const isCurrent = pathname === tab.href;
+          // The tab stays highlighted on pages under it, like Edit gift under Gifts.
+          const isCurrent =
+            pathname === tab.href ||
+            (tab.href !== "/dashboard" && pathname.startsWith(`${tab.href}/`));
           return (
             <Link
               key={tab.href}

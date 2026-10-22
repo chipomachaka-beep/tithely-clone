@@ -8,9 +8,9 @@ export const fetchCache = "force-no-store";
 
 export default function TreasurerLayout({ children }) {
   return (
-    <>
+    <div className="treasurer-page">
       <RefreshWhenShown />
       {children}
-    </>
+    </div>
   );
 }

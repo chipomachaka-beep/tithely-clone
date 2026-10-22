@@ -2,16 +2,15 @@ import Link from "next/link";
 import { formatMoney, formatDate, formatMethod, FUND_LABELS } from "@/lib/format";
 import { requireTreasurer, loadGifts } from "@/lib/treasurer";
 import { groupByMonth, giftCount } from "@/lib/months";
-import DeleteButton from "@/components/DeleteButton";
 import MemberFilter from "./MemberFilter";
-import { sendReceipt, deleteGift, sendStatement } from "./actions";
+import { sendReceipt, sendStatement } from "./actions";
 
 export const metadata = {
   title: "Gifts",
 };
 
 export default async function GiftsPage({ searchParams }) {
-  const { error, recorded, deleted, statement, member } = await searchParams;
+  const { error, recorded, edited, deleted, statement, member } = await searchParams;
   const { supabase } = await requireTreasurer();
 
   const [allGifts, { data: members }, { data: statements }] = await Promise.all([
@@ -65,9 +64,14 @@ export default async function GiftsPage({ searchParams }) {
           Envelope gift recorded under the member&apos;s name.
         </p>
       )}
+      {edited && (
+        <p className="notice" role="status">
+          Gift updated. The change is saved in the Change History.
+        </p>
+      )}
       {deleted && (
         <p className="notice" role="status">
-          Gift deleted.
+          Gift deleted. The change is saved in the Change History.
         </p>
       )}
       {statement && (
@@ -138,6 +142,7 @@ export default async function GiftsPage({ searchParams }) {
                     <th>Method</th>
                     <th className="num">Amount</th>
                     <th>Receipt</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -156,28 +161,48 @@ export default async function GiftsPage({ searchParams }) {
                       <td className="num cell-amount">{formatMoney(d.amount)}</td>
                       <td className="cell-receipt">
                         {d.receipt_number ? (
-                          <Link href={`/receipt/${d.id}`} className="receipt-sent">
-                            Receipt sent · {d.receipt_number}
+                          <Link
+                            href={`/receipt/${d.id}`}
+                            className="receipt-sent"
+                            title={`Receipt ${d.receipt_number}`}
+                          >
+                            {d.receipt_number}
                           </Link>
                         ) : (
-                          <div className="row-actions">
-                            <form action={sendReceipt}>
-                              <input type="hidden" name="donation_id" value={d.id} />
-                              <input type="hidden" name="filter" value={member ?? ""} />
-                              <button type="submit" className="button button-small">
-                                Send receipt
-                              </button>
-                            </form>
-                            {/* Only envelope gifts (cash or check) can be deleted, and only
-                                before a receipt is sent. */}
-                            {d.method !== "online" && (
-                              <DeleteButton
-                                action={deleteGift}
-                                id={d.id}
-                                what={`${d.profiles?.full_name}'s ${formatMoney(d.amount)} gift`}
-                              />
-                            )}
-                          </div>
+                          <form action={sendReceipt}>
+                            <input type="hidden" name="donation_id" value={d.id} />
+                            <input type="hidden" name="filter" value={member ?? ""} />
+                            <button type="submit" className="button button-small">
+                              Send receipt
+                            </button>
+                          </form>
+                        )}
+                      </td>
+                      <td className="cell-actions">
+                        {/* Only envelope gifts (cash or check) can be edited, and only
+                            before a receipt or that month's statement is sent. */}
+                        {d.method !== "online" &&
+                        !d.receipt_number &&
+                        sent.has(`${d.user_id}|${month.key}`) ? (
+                          <Link
+                            href={`/dashboard/gifts/${d.id}`}
+                            className="locked-link"
+                            title={`The ${month.name} statement was already sent, so this gift is locked.`}
+                          >
+                            Locked
+                          </Link>
+                        ) : d.method !== "online" && !d.receipt_number ? (
+                          <Link
+                            href={`/dashboard/gifts/${d.id}`}
+                            className="edit-link"
+                            aria-label={`Edit ${d.profiles?.full_name}'s ${formatMoney(d.amount)} gift`}
+                          >
+                            Edit
+                          </Link>
+                        ) : (
+                          <span className="no-actions" title={d.receipt_number ? "Has a receipt" : "Online gift"}>
+                            —
+                          </span>
                         )}
                       </td>
                     </tr>

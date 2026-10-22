@@ -55,22 +55,66 @@ export async function recordPayment(formData) {
   redirect("/dashboard/pay-bills?paid=1");
 }
 
-// Treasurer action: delete a recorded bill payment.
-// The database rules (supabase/delete-rules.sql) only let the treasurer do this.
-export async function deletePayment(formData) {
+// Treasurer actions: save changes to, or delete, a bill payment. Both need a
+// reason. The database functions edit_payment and delete_payment
+// (supabase/edit-history.sql) check the treasurer and write the change history.
+export async function deletePaymentChange(formData) {
   const { supabase } = await requireTreasurer();
 
-  const { data, error } = await supabase
-    .from("payments")
-    .delete()
-    .eq("id", formData.get("id"))
-    .select("id");
+  const id = String(formData.get("id") ?? "");
+  const reason = String(formData.get("reason") ?? "").trim();
+  if (reason.length < 3) {
+    redirect(`/dashboard/pay-bills/${id}?error=${encodeURIComponent("Please give a short reason (at least 3 characters).")}`);
+  }
 
-  if (error || data.length === 0) {
-    const reason = error ? error.message : "That payment could not be deleted.";
-    redirect(`/dashboard/pay-bills?error=${encodeURIComponent(reason)}`);
+  const { error } = await supabase.rpc("delete_payment", { payment_id: id, reason });
+  if (error) {
+    redirect(`/dashboard/pay-bills/${id}?error=${encodeURIComponent(error.message)}`);
   }
 
   revalidatePath("/dashboard", "layout");
   redirect("/dashboard/pay-bills?deleted=1");
+}
+
+export async function savePaymentChange(formData) {
+  const { supabase } = await requireTreasurer();
+
+  const id = String(formData.get("id") ?? "");
+  const reason = String(formData.get("reason") ?? "").trim();
+  const editPage = (message) =>
+    `/dashboard/pay-bills/${id}?error=${encodeURIComponent(message)}`;
+
+  if (reason.length < 3) {
+    redirect(editPage("Please give a short reason (at least 3 characters)."));
+  }
+
+  const payee = String(formData.get("payee") ?? "").trim();
+  const amount = Math.round(Number(formData.get("amount")) * 100) / 100;
+  const paidOn = String(formData.get("paid_on") ?? "");
+  if (payee === "" || payee.length > 100) {
+    redirect(editPage("Please enter who the payment is to (up to 100 characters)."));
+  }
+  if (!Number.isFinite(amount) || amount <= 0) {
+    redirect(editPage("Please enter an amount greater than $0."));
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(paidOn) || paidOn > churchToday()) {
+    redirect(editPage("Please enter a date that isn't in the future."));
+  }
+
+  const { error } = await supabase.rpc("edit_payment", {
+    payment_id: id,
+    new_paid_on: paidOn,
+    new_payee: payee,
+    new_category: formData.get("category"),
+    new_amount: amount,
+    new_fund: formData.get("fund"),
+    new_note: String(formData.get("note") ?? "").trim(),
+    reason,
+  });
+  if (error) {
+    redirect(editPage(error.message));
+  }
+
+  revalidatePath("/dashboard", "layout");
+  redirect("/dashboard/pay-bills?edited=1");
 }

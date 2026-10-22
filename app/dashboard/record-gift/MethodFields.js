@@ -3,8 +3,8 @@
 // Cash or check choice. The check number box only appears for checks.
 import { useState } from "react";
 
-export default function MethodFields() {
-  const [method, setMethod] = useState("cash");
+export default function MethodFields({ defaultMethod = "cash", defaultCheckNumber = "" }) {
+  const [method, setMethod] = useState(defaultMethod);
 
   return (
     <>
@@ -41,6 +41,7 @@ export default function MethodFields() {
             pattern="[A-Za-z0-9\-]+"
             title="Letters, numbers, and dashes only"
             placeholder="e.g. 1042"
+            defaultValue={defaultCheckNumber}
           />
         </label>
       )}

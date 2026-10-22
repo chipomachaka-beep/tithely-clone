@@ -9,7 +9,10 @@ import {
   loadPayments,
   totalsBy,
   sum,
+  churchMonth,
 } from "@/lib/treasurer";
+import { monthsBetween, monthlyTotals } from "@/lib/months";
+import TrendCharts from "@/components/TrendCharts";
 
 export const metadata = {
   title: "Reports",
@@ -41,6 +44,14 @@ export default async function ReportsPage() {
   // Bars are sized relative to the biggest fund, which fills the full width.
   const largestFund = Math.max(...Object.values(givenByFund));
 
+  // Month by month, from the first month with a gift or payment up to this
+  // month (the last 12 at most), including months with nothing in them.
+  const thisMonth = churchMonth().prefix;
+  const firstMonth = [...gifts.map((g) => g.given_on), ...payments.map((p) => p.paid_on)]
+    .map((date) => date.slice(0, 7))
+    .reduce((earliest, key) => (key < earliest ? key : earliest), thisMonth);
+  const months = monthlyTotals(monthsBetween(firstMonth, thisMonth), gifts, payments);
+
   return (
     <section>
       <h1>Reports</h1>
@@ -70,7 +81,10 @@ export default async function ReportsPage() {
         </div>
       </div>
 
-      <h2 className="section-heading">Totals by Fund</h2>
+      <h2 className="section-heading">Trends</h2>
+      <TrendCharts months={months} />
+
+      <h2 className="section-heading section-heading-spaced">Totals by Fund</h2>
       <ul className="bar-chart">
         {FUNDS.map((fund) => {
           const total = givenByFund[fund];

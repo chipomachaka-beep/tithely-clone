@@ -6,7 +6,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { requireTreasurer } from "@/lib/treasurer";
+import { requireTreasurer, churchToday } from "@/lib/treasurer";
 import { isMonthKey, monthRange } from "@/lib/months";
 
 // Back to the Gifts page, keeping the "Member" dropdown choice if there was one.
@@ -34,27 +34,71 @@ export async function sendReceipt(formData) {
   redirect(giftsPage(formData));
 }
 
-// Treasurer action: delete an envelope gift (cash or check) that has no
-// receipt yet. The database rules (supabase/delete-rules.sql) refuse anything
-// else, so asking it to delete a receipted or online gift deletes nothing.
-export async function deleteGift(formData) {
+// Treasurer actions: save changes to, or delete, an envelope gift (cash or
+// check) with no receipt, in a month whose statement hasn't been sent. Both
+// need a reason. The database functions edit_envelope_gift and
+// delete_envelope_gift (supabase/edit-history.sql) check all of that and write
+// the change history.
+export async function deleteGiftChange(formData) {
   const { supabase } = await requireTreasurer();
 
-  const { data, error } = await supabase
-    .from("donations")
-    .delete()
-    .eq("id", formData.get("id"))
-    .select("id");
+  const id = String(formData.get("id") ?? "");
+  const reason = String(formData.get("reason") ?? "").trim();
+  if (reason.length < 3) {
+    redirect(`/dashboard/gifts/${id}?error=${encodeURIComponent("Please give a short reason (at least 3 characters).")}`);
+  }
 
-  if (error || data.length === 0) {
-    const reason = error
-      ? error.message
-      : "Only cash or check gifts without a receipt can be deleted.";
-    redirect(`/dashboard/gifts?error=${encodeURIComponent(reason)}`);
+  const { error } = await supabase.rpc("delete_envelope_gift", { gift_id: id, reason });
+  if (error) {
+    redirect(`/dashboard/gifts/${id}?error=${encodeURIComponent(error.message)}`);
   }
 
   revalidatePath("/", "layout");
-  redirect("/dashboard/gifts?deleted=1");
+  redirect(giftsPage(formData, "deleted=1"));
+}
+
+export async function saveGiftChange(formData) {
+  const { supabase } = await requireTreasurer();
+
+  const id = String(formData.get("id") ?? "");
+  const reason = String(formData.get("reason") ?? "").trim();
+  const editPage = (message) =>
+    `/dashboard/gifts/${id}?error=${encodeURIComponent(message)}`;
+
+  if (reason.length < 3) {
+    redirect(editPage("Please give a short reason (at least 3 characters)."));
+  }
+
+  const amount = Math.round(Number(formData.get("amount")) * 100) / 100;
+  const method = formData.get("method");
+  const checkNumber = String(formData.get("check_number") ?? "").trim();
+  const givenOn = String(formData.get("given_on") ?? "");
+  if (!Number.isFinite(amount) || amount <= 0) {
+    redirect(editPage("Please enter an amount greater than $0."));
+  }
+  if (method === "check" && !/^[A-Za-z0-9-]{1,20}$/.test(checkNumber)) {
+    redirect(editPage("Please enter the check number (letters, numbers, and dashes, up to 20)."));
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(givenOn) || givenOn > churchToday()) {
+    redirect(editPage("Please enter a gift date that isn't in the future."));
+  }
+
+  const { error } = await supabase.rpc("edit_envelope_gift", {
+    gift_id: id,
+    new_user_id: formData.get("member_id"),
+    new_given_on: givenOn,
+    new_amount: amount,
+    new_fund: formData.get("fund"),
+    new_method: method,
+    new_check_number: method === "check" ? checkNumber : null,
+    reason,
+  });
+  if (error) {
+    redirect(editPage(error.message));
+  }
+
+  revalidatePath("/", "layout");
+  redirect(giftsPage(formData, "edited=1"));
 }
 
 // Treasurer action: send a member their statement for one month. Like Send
